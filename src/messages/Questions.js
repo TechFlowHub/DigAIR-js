@@ -70,7 +70,7 @@ exports.RESP_QUESTION_5 = `📌 **Tabela do Imposto de Renda 2025**\n
 ⚠️ **Atenção!** A tabela foi ajustada, mas deveria ter sido mais compatível com a inflação, o que faz com que mais pessoas acabem pagando imposto devido aos reajustes salariais. 📉\n
 ❗ Existe uma proposta para aumentar a faixa de isenção para *R$ 5.000*, mas até o momento *não há confirmação oficial* pela Receita Federal. 🚨`;
 
-exports.RESP_QUESTION_6 = `"🏡 *Declarar meu patrimônio vai aumentar meu imposto?*\n
+exports.RESP_QUESTION_6 = `🏡 *Declarar meu patrimônio vai aumentar meu imposto?*\n
 🧐 *Não necessariamente!* O Imposto de Renda incide sobre a sua renda (salários, aluguéis, investimentos), não sobre os bens que você possui.\n
 💡 *Por que devo declarar meu patrimônio?*\n
 ✔️ Evita problemas com a Receita Federal e possíveis malha-finas;\n
@@ -78,7 +78,7 @@ exports.RESP_QUESTION_6 = `"🏡 *Declarar meu patrimônio vai aumentar meu impo
 ✔️ É essencial para comprovar evolução patrimonial e justificar sua renda.\n
 ⚠️ *Mas atenção!* Se seu patrimônio for vendido com lucro, pode haver tributação sobre o ganho de capital. Nesse caso, é importante se informar para evitar surpresas! 📊💰`;
 
-exports.RESP_QUESTION_7 = `"📝 *Como declarar o Imposto de Renda?*\n
+exports.RESP_QUESTION_7 = `📝 *Como declarar o Imposto de Renda?*\n
 📍 *Dica:* Se você preferir ter o auxílio de profissionais para preencher sua declaração, o Unifavip Wyden, em Caruaru, oferece esse serviço sem custo com o projeto NAF! Estudantes de contabilidade irão te ajudar a preencher a declaração corretamente e tirar todas as suas dúvidas. 💼👨‍💻\n
 🌎 *Endereço da unidade:* Av. Adjar da Silva Casé, 800 - Indianópolis 55.024-740 Caruaru, PE · Brasil. 🏢\n
 1️⃣ *Acesse o programa da Receita Federal* – Baixe o programa no site oficial ou use o aplicativo 'Meu Imposto de Renda'.📲\n
@@ -88,7 +88,7 @@ exports.RESP_QUESTION_7 = `"📝 *Como declarar o Imposto de Renda?*\n
 5️⃣ *Entregue a declaração*: Após revisar os dados, clique para *enviar à Receita Federal*.\n
 💼 *Atenção:* Se você cometeu algum erro ao preencher, pode retificar a declaração mais tarde, mas sempre é melhor evitar.⚠️`;
 
-exports.RESP_QUESTION_8 = `"🏠 *Tenho mais de uma casa, preciso declarar todas?*\n
+exports.RESP_QUESTION_8 = `🏠 *Tenho mais de uma casa, preciso declarar todas?*\n
 💡 *Sim! Você deve declarar todas as propriedades* que possuir no Brasil ou no exterior, mesmo que não tenha recebido nenhuma renda delas.\n
 🏡 *Isso inclui:* Imóveis adquiridos, seja para venda, locação, ou mesmo para uso próprio.\n
 🔹 Quando você declara seus imóveis, a Receita Federal pode verificar se o valor declarado está correto e compatível com sua renda.\n
@@ -96,14 +96,14 @@ exports.RESP_QUESTION_8 = `"🏠 *Tenho mais de uma casa, preciso declarar todas
 ✔️ *Por exemplo:* Se você possui uma casa de veraneio ou um imóvel para alugar, ambos devem ser informados, mesmo sem gerar renda.\n
 ⚠️ Mas, se não declarar os bens, você poderá ser enquadrado na malha fina.`;
 
-exports.RESP_QUESTION_9 = `"🚀 *USE NOSSA IA! 🤖✨*\n
+exports.RESP_QUESTION_9 = `🚀 *USE NOSSA IA! 🤖✨*\n
 📢 *Agora você pode fazer perguntas diretamente para nossa Inteligência Artificial!* \n
 💬 Ela pode responder dúvidas sobre Imposto de Renda, finanças e muito mais! 🧠💡\n
 *Só digitar sua dúvida* e nossa IA vai te ajudar a entender tudo de forma rápida e precisa! 🔍🤖\n`
 
-exports.RESP_QUESTION_0 = `"👋 *Para finalizar o atendimento*:\n
-🚪 Se você não tiver mais nenhuma dúvida, pode encerrar o atendimento.\n
-🔴 *Para encerrar, basta digitar 0* e você será desconectado.\n
-*Se precisar de ajuda no futuro, não hesite em retornar! Estaremos aqui para te ajudar sempre!* 🫶💬\n
-🏁 *Agradecemos pelo seu tempo!* 🙌`;
+exports.RESP_QUESTION_0 = `📴 Atendimento encerrado, volte sempre! 😊\n
+📍 Lembre-se: para um atendimento físico, você pode ir até o Unifavip Wyden! 🏢\n
+ℹ️ O Unifavip Wyden, estudantes de contabilidade estarão prontos para lhe ajudar e orientar no preenchimento do seu imposto de renda! 📄💼\n
+O projeto NAF acontece às quartas-feiras das 14:00h as 17:00h no Unifavip Wyden\n
+🌎 No Endereço: Av. Adjar da Silva Casé, 800 - Indianópolis, 55024-740, Caruaru, PE, Brasil. 🏢`;
 

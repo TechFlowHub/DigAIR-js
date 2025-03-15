@@ -1,10 +1,9 @@
-const { on } = require('events');
 const qrcode = require('qrcode-terminal');
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const { QUESTION, RESP_QUESTION_1, RESP_QUESTION_2, RESP_QUESTION_3, RESP_QUESTION_4, RESP_QUESTION_5, RESP_QUESTION_6, RESP_QUESTION_7, RESP_QUESTION_8, RESP_QUESTION_9, RESP_QUESTION_0 } = require('./messages/Questions');
+const { OPTION_CONTINUE_ERROR, CONTINUE_MESSAGE, INVALID_MESSAGE, FIRST_MESSAGE } = require('./messages/Menus');
 
 const client = new Client({ authStrategy: new LocalAuth() });
-let isConnected = false;
 let userStates = {}; 
 
 client.on('qr', (qr) => {
@@ -34,9 +33,6 @@ client.on('disconnected', (reason) => {
 onlyNumbers = (string) => {
     return string.replace(/[^0-9]/g, "");
 };
-
-let phones = []; 
-let currentService = [];
 
 const switchMessage = (message, text) => {
     switch (text) {
@@ -71,55 +67,60 @@ const switchMessage = (message, text) => {
             message.reply(RESP_QUESTION_0);
             break;
         default:
-            message.reply('⚠️ *Opção inválida!* Por favor, digite um número de *1 a 9* para escolher uma pergunta ou *0 para encerrar* o atendimento.');
+            message.reply(INVALID_MESSAGE);
     }
 };
 
 client.on('message', async (message) => {
-    setTimeout(() => {
-        let numberPhone = onlyNumbers(message.from);
+    let numberPhone = onlyNumbers(message.from);
 
-        if (!userStates[numberPhone]) {
-            userStates[numberPhone] = { awaitingResponse: true, awaitingConfirmation: false };
+    if (!userStates[numberPhone]) {
+        userStates[numberPhone] = { awaitingResponse: true, awaitingConfirmation: false };
 
-            console.log(`Novo usuário cadastrado: ${message.notifyName}`);
+        console.log(`Novo usuário cadastrado: ${message.notifyName}`);
 
-            message.reply(`Olá *${message.notifyName}*! Seja bem-vindo!`);
+        message.reply(FIRST_MESSAGE);
+        setTimeout(() => {
+            message.reply(QUESTION);
+        }, 500);
+        userStates[numberPhone].awaitingResponse = false;
+        return;
+    }
+
+    if (userStates[numberPhone].awaitingConfirmation) {
+        if (message.body.toLowerCase() === 'sim') {
+            userStates[numberPhone].awaitingConfirmation = false;
             setTimeout(() => {
                 message.reply(QUESTION);
             }, 1000);
-            userStates[numberPhone].awaitingResponse = false;
-            return;
-        }
-
-        if (userStates[numberPhone].awaitingConfirmation) {
-            if (message.body.toLowerCase() === 'sim') {
-                userStates[numberPhone].awaitingConfirmation = false;
-                setTimeout(() => {
-                    message.reply(QUESTION);
-                }, 1000);
-            } else if (message.body.toLowerCase() === 'finalizar') {
-                userStates[numberPhone].awaitingConfirmation = false;
-                message.reply('Obrigado por usar nossos serviços! Se precisar, estamos por aqui.');
-            } else if (/^[0-9]$/.test(message.body)) {
-                userStates[numberPhone].awaitingConfirmation = false;
-                switchMessage(message, message.body);
-            } else {
-                message.reply('Por favor, responda apenas com "sim" ou "não".');
-            }
-            return;
-        }
-
-        if (/^[0-9]$/.test(message.body)) {
+        } else if (message.body.toLowerCase() === 'finalizar' || message.body.toLowerCase() === 'f' || message.body === '0') {
+            userStates[numberPhone].awaitingConfirmation = false;
+            message.reply(RESP_QUESTION_0);
+            delete userStates[numberPhone];
+        } else if (/^[0-9]$/.test(message.body)) {
             switchMessage(message, message.body);
+            setTimeout(() => {
+                message.reply(CONTINUE_MESSAGE);
+            }, 1000);
+            return;
         } else {
-            message.reply('⚠️ *Opção inválida!* Por favor, digite um número entre *1 e 9* ou *0 para encerrar*.');
+            message.reply(OPTION_CONTINUE_ERROR);
         }
+        return;
+    }
 
-        userStates[numberPhone].awaitingConfirmation = true;
-        setTimeout(() => {
-            message.reply(`🌟 Gostaria de ver o painel de opções novamente?\n
-Por favor digite *SIM*, *FINALIZAR* para finalizar o atendimento 👇😊, ou escolha uma nova opção entre *1 e 9*.`);
-        }, 1000);
+    if (/^[0-9]$/.test(message.body)) {
+        switchMessage(message, message.body);
+        if (message.body === '0') {
+            delete userStates[numberPhone];
+            return;
+        }
+    } else {
+        message.reply(INVALID_MESSAGE);
+    }
+
+    userStates[numberPhone].awaitingConfirmation = true;
+    setTimeout(() => {
+        message.reply(CONTINUE_MESSAGE);
     }, 1000);
 });
