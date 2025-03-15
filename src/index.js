@@ -93,7 +93,7 @@ client.on('message', async (message) => {
             setTimeout(() => {
                 message.reply(QUESTION);
             }, 1000);
-        } else if (message.body.toLowerCase() === 'finalizar' || message.body.toLowerCase() === 'f') {
+        } else if (message.body.toLowerCase() === 'finalizar' || message.body.toLowerCase() === 'f' || message.body === '0') {
             userStates[numberPhone].awaitingConfirmation = false;
             message.reply(RESP_QUESTION_0);
             delete userStates[numberPhone];
@@ -120,7 +120,7 @@ client.on('message', async (message) => {
             userStates[numberPhone].iaState = true;
             userStates[numberPhone].awaitingConfirmation = false;
             prompIa = message.body
-            if(message.body === 'p' && userStates[numberPhone].iaState === true){
+            if(message.body === '0' && userStates[numberPhone].iaState === true){
                 console.log("voce finalizou a ia")
                 userStates[numberPhone].iaState = false;
                 message.reply('voce saiu da ia')
@@ -129,4 +129,10 @@ client.on('message', async (message) => {
     } else {
         message.reply(INVALID_MESSAGE);
     }
+
+    userStates[numberPhone].awaitingConfirmation = true;
+
+    setTimeout(() => {
+        message.reply(CONTINUE_MESSAGE);
+    }, 1000);
 });
