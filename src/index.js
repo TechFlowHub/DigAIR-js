@@ -60,9 +60,6 @@ const switchMessage = (message, text) => {
         case '8':
             message.reply(RESP_QUESTION_8);
             break;
-        case '9':
-            message.reply(RESP_QUESTION_9);
-            break;
         case '0':
             message.reply(RESP_QUESTION_0);
             break;
@@ -117,14 +114,33 @@ client.on('message', async (message) => {
             return;
         } else if (message.body === '9') {
             userStates[numberPhone].iaState = true;
-            message.reply('voce entrou na ia')
+            message.reply(RESP_QUESTION_9);
+            if(userStates[numberPhone].iaState === true){
+                client.on('message', async (messageIa) => {
+                    const promptIa = messageIa.body;
+                    try {
+                        const reply = await ia(promptIa);  
+                        console.log(reply);  
+                        message.reply(reply); 
+                    } catch (error) {
+                        console.error("Erro ao processar a IA:", error.message);
+                        message.reply("Desculpe, ocorreu um erro ao processar sua mensagem.");
+                    }
+                });
+            
+            }
+            else{
+                userStates[numberPhone].iaState = false;
+            }
+            
+            
         } 
 
         if (message.body === '0' && userStates[numberPhone].iaState === true) {
             userStates[numberPhone].iaState = false;
             message.reply('voce saiu da ia')
         } 
-    } else {
+    } else if (userStates[numberPhone].iaState !== true) {
         message.reply(INVALID_MESSAGE);
     }
 
