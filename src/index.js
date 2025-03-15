@@ -2,7 +2,7 @@ const qrcode = require('qrcode-terminal');
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const { QUESTION, RESP_QUESTION_1, RESP_QUESTION_2, RESP_QUESTION_3, RESP_QUESTION_4, RESP_QUESTION_5, RESP_QUESTION_6, RESP_QUESTION_7, RESP_QUESTION_8, RESP_QUESTION_9, RESP_QUESTION_0 } = require('./messages/Questions');
 const { OPTION_CONTINUE_ERROR, CONTINUE_MESSAGE, INVALID_MESSAGE, FIRST_MESSAGE } = require('./messages/Menus');
-
+const {ia} = require('./groqIA/groq')
 const client = new Client({ authStrategy: new LocalAuth() });
 let userStates = {}; 
 
@@ -75,7 +75,7 @@ client.on('message', async (message) => {
     let numberPhone = onlyNumbers(message.from);
 
     if (!userStates[numberPhone]) {
-        userStates[numberPhone] = { awaitingResponse: true, awaitingConfirmation: false };
+        userStates[numberPhone] = { awaitingResponse: true, awaitingConfirmation: false, iaState: false };
 
         console.log(`Novo usuário cadastrado: ${message.notifyName}`);
 
@@ -93,7 +93,7 @@ client.on('message', async (message) => {
             setTimeout(() => {
                 message.reply(QUESTION);
             }, 1000);
-        } else if (message.body.toLowerCase() === 'finalizar' || message.body.toLowerCase() === 'f' || message.body === '0') {
+        } else if (message.body.toLowerCase() === 'finalizar' || message.body.toLowerCase() === 'f') {
             userStates[numberPhone].awaitingConfirmation = false;
             message.reply(RESP_QUESTION_0);
             delete userStates[numberPhone];
@@ -111,16 +111,22 @@ client.on('message', async (message) => {
 
     if (/^[0-9]$/.test(message.body)) {
         switchMessage(message, message.body);
-        if (message.body === '0') {
+        if (message.body === '0' && userStates[numberPhone].iaState === false) {
             delete userStates[numberPhone];
             return;
+        }
+        else if(message.body == '9'){
+            console.log('voce entrou na ia')
+            userStates[numberPhone].iaState = true;
+            userStates[numberPhone].awaitingConfirmation = false;
+            prompIa = message.body
+            if(message.body === 'p' && userStates[numberPhone].iaState === true){
+                console.log("voce finalizou a ia")
+                userStates[numberPhone].iaState = false;
+                message.reply('voce saiu da ia')
+            }
         }
     } else {
         message.reply(INVALID_MESSAGE);
     }
-
-    userStates[numberPhone].awaitingConfirmation = true;
-    setTimeout(() => {
-        message.reply(CONTINUE_MESSAGE);
-    }, 1000);
 });

@@ -3,7 +3,7 @@ exports.QUESTION = `📢 Escolha uma opção! Digite um número de *1 a 9* para 
 *1* - 💰 Quem deve declarar o Imposto de Renda em 2025\n
 *2* - 🛑 Quem NÃO precisa declarar o Imposto de Renda em 2025?\n
 *3* - 📌 Para que serve o Imposto de Renda e por que ele é cobrado?\n
-*4* - 📉 O que é IRRF?\n
+*4* - ✈️ Rendimentos no exterior?\n
 *5* - 📊 Tabela do Imposto de Renda 2025\n
 *6* - 🏡 Declarar meu patrimônio vai aumentar meu imposto?\n
 *7* - 📝 Como declarar o Imposto de Renda?\n
@@ -42,18 +42,16 @@ exports.RESP_QUESTION_3 = `💰 *Para que serve o Imposto de Renda e por que ele
 📊 Desde *1979*, o IR é uma das principais fontes de receita do governo. Em *2021*, a arrecadação federal atingiu *R$ 1,878 trilhão*! 📈💸\n
 ⚠️ Ou seja, o imposto é essencial para manter o funcionamento do país e garantir investimentos para toda a população! 🇧🇷✅`;
 
-exports.RESP_QUESTION_4 = `📌 *O que é IRRF?*\n
-💰 O *IRRF (Imposto de Renda Retido na Fonte)* é um imposto que já é descontado do seu salário antes mesmo de você recebê-lo.\n
-🏢 A empresa calcula e retém o imposto diretamente do seu pagamento e repassa para o governo. ✅\n
-🔎 *Por que o IRRF é descontado?*\n
-🔹 Para facilitar o pagamento do Imposto de Renda;\n
-🔹 Para garantir que você esteja em dia com suas obrigações fiscais.\n
-📊 *Como é calculado o IRRF?*\n
-🧮 O valor do imposto é calculado sobre o *salário bruto*, mas alguns descontos podem reduzir a base de cálculo:\n
-➖ INSS (contribuição previdenciária);\n
-➖ Pensão alimentícia (se houver);\n
-➖ Dependentes (R$ 189,59 por dependente).\n
-⚠️ Ou seja, o IRRF já é um adiantamento do seu Imposto de Renda, para que você não tenha que pagar tudo de uma vez depois! 💵📑`;
+exports.RESP_QUESTION_4 = `
+📅 A partir deste ano, os dados de contas bancárias no exterior agora já estão incluídos na declaração pré-preenchida!\n
+🌍 Isso aconteceu porque a legislação passou a tributar as offshores (empresas de investimentos no exterior) e os rendimentos no exterior.\n
+💼 Por que isso aconteceu?
+A nova lei determinou a tributação de Fundos Exclusivos e offshores, fazendo com que os rendimentos fora do Brasil sejam tributados de forma definitiva na declaração de ajuste anual, com uma alíquota de 15%.\n
+💸 Como funciona agora?\n
+Até 2023, os rendimentos no exterior eram tributados mensalmente, mas com a nova regra, o pagamento passa a ser feito de forma anual.\n
+🔎 Na declaração:\n
+Agora, quando você declarar seus bens de investimentos no exterior, será possível informar tanto os rendimentos quanto os impostos pagos tanto no Brasil quanto fora dele.\n
+📍 Fique atento! A inclusão desses dados pode facilitar e agilizar a sua declaração, ajudando a evitar problemas com a Receita Federal.`;
 
 exports.RESP_QUESTION_5 = `📌 **Tabela do Imposto de Renda 2025**\n
 📊 O cálculo do IRPF é *progressivo*, ou seja, quanto maior a renda, maior o percentual de imposto pago. 🔄💰\n
@@ -70,7 +68,7 @@ exports.RESP_QUESTION_5 = `📌 **Tabela do Imposto de Renda 2025**\n
 ⚠️ **Atenção!** A tabela foi ajustada, mas deveria ter sido mais compatível com a inflação, o que faz com que mais pessoas acabem pagando imposto devido aos reajustes salariais. 📉\n
 ❗ Existe uma proposta para aumentar a faixa de isenção para *R$ 5.000*, mas até o momento *não há confirmação oficial* pela Receita Federal. 🚨`;
 
-exports.RESP_QUESTION_6 = `🏡 *Declarar meu patrimônio vai aumentar meu imposto?*\n
+exports.RESP_QUESTION_6 = `"🏡 *Declarar meu patrimônio vai aumentar meu imposto?*\n
 🧐 *Não necessariamente!* O Imposto de Renda incide sobre a sua renda (salários, aluguéis, investimentos), não sobre os bens que você possui.\n
 💡 *Por que devo declarar meu patrimônio?*\n
 ✔️ Evita problemas com a Receita Federal e possíveis malha-finas;\n
@@ -78,7 +76,7 @@ exports.RESP_QUESTION_6 = `🏡 *Declarar meu patrimônio vai aumentar meu impos
 ✔️ É essencial para comprovar evolução patrimonial e justificar sua renda.\n
 ⚠️ *Mas atenção!* Se seu patrimônio for vendido com lucro, pode haver tributação sobre o ganho de capital. Nesse caso, é importante se informar para evitar surpresas! 📊💰`;
 
-exports.RESP_QUESTION_7 = `📝 *Como declarar o Imposto de Renda?*\n
+exports.RESP_QUESTION_7 = `"📝 *Como declarar o Imposto de Renda?*\n
 📍 *Dica:* Se você preferir ter o auxílio de profissionais para preencher sua declaração, o Unifavip Wyden, em Caruaru, oferece esse serviço sem custo com o projeto NAF! Estudantes de contabilidade irão te ajudar a preencher a declaração corretamente e tirar todas as suas dúvidas. 💼👨‍💻\n
 🌎 *Endereço da unidade:* Av. Adjar da Silva Casé, 800 - Indianópolis 55.024-740 Caruaru, PE · Brasil. 🏢\n
 1️⃣ *Acesse o programa da Receita Federal* – Baixe o programa no site oficial ou use o aplicativo 'Meu Imposto de Renda'.📲\n
@@ -88,7 +86,7 @@ exports.RESP_QUESTION_7 = `📝 *Como declarar o Imposto de Renda?*\n
 5️⃣ *Entregue a declaração*: Após revisar os dados, clique para *enviar à Receita Federal*.\n
 💼 *Atenção:* Se você cometeu algum erro ao preencher, pode retificar a declaração mais tarde, mas sempre é melhor evitar.⚠️`;
 
-exports.RESP_QUESTION_8 = `🏠 *Tenho mais de uma casa, preciso declarar todas?*\n
+exports.RESP_QUESTION_8 = `"🏠 *Tenho mais de uma casa, preciso declarar todas?*\n
 💡 *Sim! Você deve declarar todas as propriedades* que possuir no Brasil ou no exterior, mesmo que não tenha recebido nenhuma renda delas.\n
 🏡 *Isso inclui:* Imóveis adquiridos, seja para venda, locação, ou mesmo para uso próprio.\n
 🔹 Quando você declara seus imóveis, a Receita Federal pode verificar se o valor declarado está correto e compatível com sua renda.\n
@@ -96,14 +94,15 @@ exports.RESP_QUESTION_8 = `🏠 *Tenho mais de uma casa, preciso declarar todas?
 ✔️ *Por exemplo:* Se você possui uma casa de veraneio ou um imóvel para alugar, ambos devem ser informados, mesmo sem gerar renda.\n
 ⚠️ Mas, se não declarar os bens, você poderá ser enquadrado na malha fina.`;
 
-exports.RESP_QUESTION_9 = `🚀 *USE NOSSA IA! 🤖✨*\n
+exports.RESP_QUESTION_9 = `"🚀 *USE NOSSA IA! 🤖✨*\n
 📢 *Agora você pode fazer perguntas diretamente para nossa Inteligência Artificial!* \n
 💬 Ela pode responder dúvidas sobre Imposto de Renda, finanças e muito mais! 🧠💡\n
-*Só digitar sua dúvida* e nossa IA vai te ajudar a entender tudo de forma rápida e precisa! 🔍🤖\n`
+*Só digitar sua dúvida* e nossa IA vai te ajudar a entender tudo de forma rápida e precisa! 🔍🤖`;
 
 exports.RESP_QUESTION_0 = `📴 Atendimento encerrado, volte sempre! 😊\n
 📍 Lembre-se: para um atendimento físico, você pode ir até o Unifavip Wyden! 🏢\n
 ℹ️ O Unifavip Wyden, estudantes de contabilidade estarão prontos para lhe ajudar e orientar no preenchimento do seu imposto de renda! 📄💼\n
 O projeto NAF acontece às quartas-feiras das 14:00h as 17:00h no Unifavip Wyden\n
 🌎 No Endereço: Av. Adjar da Silva Casé, 800 - Indianópolis, 55024-740, Caruaru, PE, Brasil. 🏢`;
+
 
