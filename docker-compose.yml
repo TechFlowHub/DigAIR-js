@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+
+  alpine:
+    image: alpine:latest
+    container_name: alpine-container
+    command: tail -f /dev/null
+    networks:
+      - alpine-network
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: chatbot_favip
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - mysql-network
+
+  node:
+    image: node:latest
+    container_name: node-container
+    environment:
+      NODE_ENV: development
+    ports:
+      - "3000:3000"
+    volumes:
+      - node-data:/usr/src/app
+    networks:
+      - node-network
+
+volumes:
+  node-data:
+  mysql-data:
+
+networks:
+  alpine-network:
+    driver: bridge
+  node-network:
+    driver: bridge
+  mysql-network:
+    driver: bridge
