@@ -87,13 +87,13 @@ client.on('message', async (message) => {
         return;
     }
 
-    if (userStates[numberPhone].awaitingConfirmation) {
+    if (userStates[numberPhone].awaitingConfirmation && userStates[numberPhone].iaState === false) {
         if (message.body.toLowerCase() === 'sim') {
             userStates[numberPhone].awaitingConfirmation = false;
             setTimeout(() => {
                 message.reply(QUESTION);
             }, 1000);
-        } else if (message.body.toLowerCase() === 'finalizar' || message.body.toLowerCase() === 'f' || message.body === '0') {
+        } else if (message.body.toLowerCase() === 'finalizar' || message.body.toLowerCase() === 'f') {
             userStates[numberPhone].awaitingConfirmation = false;
             message.reply(RESP_QUESTION_0);
             delete userStates[numberPhone];
@@ -110,29 +110,29 @@ client.on('message', async (message) => {
     }
 
     if (/^[0-9]$/.test(message.body)) {
-        switchMessage(message, message.body);
-        if (message.body === '0' && userStates[numberPhone].iaState === false) {
+        if (message.body !== '9' && userStates[numberPhone].iaState === false){
+            switchMessage(message, message.body);
+        } else if (message.body === '0' && userStates[numberPhone].iaState === false) {
             delete userStates[numberPhone];
             return;
-        }
-        else if(message.body == '9'){
-            console.log('voce entrou na ia')
+        } else if (message.body === '9') {
             userStates[numberPhone].iaState = true;
-            userStates[numberPhone].awaitingConfirmation = false;
-            prompIa = message.body
-            if(message.body === '0' && userStates[numberPhone].iaState === true){
-                console.log("voce finalizou a ia")
-                userStates[numberPhone].iaState = false;
-                message.reply('voce saiu da ia')
-            }
-        }
+            message.reply('voce entrou na ia')
+        } 
+
+        if (message.body === '0' && userStates[numberPhone].iaState === true) {
+            userStates[numberPhone].iaState = false;
+            message.reply('voce saiu da ia')
+        } 
     } else {
         message.reply(INVALID_MESSAGE);
     }
 
-    userStates[numberPhone].awaitingConfirmation = true;
+    if (userStates[numberPhone].iaState === false) {
+        userStates[numberPhone].awaitingConfirmation = true;
 
-    setTimeout(() => {
-        message.reply(CONTINUE_MESSAGE);
-    }, 1000);
+        setTimeout(() => {
+            message.reply(CONTINUE_MESSAGE);
+        }, 1000);
+    }
 });
