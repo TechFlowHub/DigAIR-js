@@ -10,13 +10,13 @@ exports.INVALID_MESSAGE = `
 
 exports.CONTINUE_MESSAGE = `
 🌟 Gostaria de ver o painel de opções novamente?\n
-Digite [SIM] para *SIM*, [F] para *FINALIZAR* o atendimento 👇😊, escolha uma nova opção entre *1 e 8* ou use o */ia*.
+Digite [SIM] para *SIM*, [F] para *FINALIZAR* o atendimento 👇😊, escolha uma nova opção entre *1 e 8* ou use o */digair*.
 `
 
 exports.OPTION_CONTINUE_ERROR = `
 ⚠️ *Opção inválida!*\n
 🌟 Gostaria de ver o painel de opções novamente?\n
-Por favor digite [SIM] para *SIM*, [F] para *FINALIZAR* o atendimento 👇😊, escolha uma nova opção entre *1 e 8* ou use o */ia*.
+Por favor digite [SIM] para *SIM*, [F] para *FINALIZAR* o atendimento 👇😊, escolha uma nova opção entre *1 e 8* ou use o */digair*.
 `
 
 exports.EVALUATION_MESSAGE = `

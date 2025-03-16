@@ -79,6 +79,25 @@ client.on('message', async (message) => {
             setTimeout(() => {
                 message.reply(QUESTION);
             }, 1000);
+        
+        }
+        else if (message.body.toLowerCase().startsWith('/digair')) {
+            console.log("Entrou na IA");
+        
+            const userMessage = message.body.slice(3).trim();
+        
+            console.log(userMessage);
+            try {
+                const reply = await ia(userMessage);
+                console.log(reply);
+                message.reply(reply);
+                setTimeout(() => {
+                    message.reply(CONTINUE_MESSAGE);
+                }, 1000);
+            } catch (error) {
+                console.error("Erro ao processar a IA:", error);
+                message.reply("Ocorreu um erro ao processar sua solicitação. Tente novamente mais tarde.");
+            }
         } else if (message.body.toLowerCase() === 'finalizar' || message.body.toLowerCase() === 'f') {
             userStates[numberPhone].awaitingConfirmation = false;
             message.reply(RESP_QUESTION_0);
@@ -89,13 +108,14 @@ client.on('message', async (message) => {
                 message.reply(CONTINUE_MESSAGE);
             }, 1000);
             return;
-        } else {
-            message.reply(OPTION_CONTINUE_ERROR);
+        } else if (message.body.toLowerCase().startsWith === '/digair'){
+                message.reply(INVALID_MESSAGE);
+        
         }
         return;
     }
 
-    if (message.body.toLowerCase().startsWith('/ia')) {
+    if (message.body.toLowerCase().startsWith('/digair')) {
         console.log("Entrou na IA");
     
         const userMessage = message.body.slice(3).trim();
@@ -119,7 +139,7 @@ client.on('message', async (message) => {
         }
     } 
 
-    if (message.body.toLowerCase().startsWith === '/ia'){
+    if (message.body.toLowerCase().startsWith === '/digair'){
         message.reply(INVALID_MESSAGE);
     }
     
