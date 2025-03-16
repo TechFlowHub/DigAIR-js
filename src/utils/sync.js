@@ -1,6 +1,6 @@
-const sequelize = require('./config/database');
-const Phone = require('./models/Phone');
-const Evaluation = require('./models/Evaluation');
+const sequelize = require('../config/database');
+const Phone = require('../models/Phone');
+const Evaluation = require('../models/Evaluation');
 
 async function syncDatabase() {
     try {

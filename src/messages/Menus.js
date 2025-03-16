@@ -19,7 +19,7 @@ exports.OPTION_CONTINUE_ERROR = `
 Por favor digite [SIM] para *SIM*, [F] para *FINALIZAR* o atendimento 👇😊, escolha uma nova opção entre *1 e 8* ou use o */ia*.
 `
 
-exposts.EVALUATION_MESSAGE = `
+exports.EVALUATION_MESSAGE = `
 ⭐ Avalie nosso atendimento! Escolha um número de *1 a 5*:\n
 *5 - 🤩 Excelente*
 *4 - 😃 Bom*
@@ -28,7 +28,7 @@ exposts.EVALUATION_MESSAGE = `
 *1 - 😞 Péssimo*
 `
 
-exposts.EVALUATION_THANKS = `
+exports.EVALUATION_THANKS = `
 🌟 *Obrigado pela avaliação!* 🌟\n
 Sua opinião é muito importante para nós! 🚀💡\n
 Se precisar de mais alguma coisa, estamos à disposição! 😊
