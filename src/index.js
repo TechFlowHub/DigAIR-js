@@ -37,6 +37,16 @@ onlyNumbers = (string) => {
     return string.replace(/[^0-9]/g, "");
 };
 
+const resetTimeout = (numberPhone, message) => {
+    if (userStates[numberPhone]?.timeoutId) {
+        clearTimeout(userStates[numberPhone].timeoutId);
+    }
+    userStates[numberPhone].timeoutId = setTimeout(() => {
+        message.reply("Atendimento finalizado por inatividade");
+        console.log(`Mensagem enviada para ${numberPhone}: "Você está aí?"`);
+    }, 42000);
+};
+
 const switchMessage = (message, text) => {
     switch (text) {
         case '1': message.reply(RESP_QUESTION_1); break;
@@ -57,7 +67,7 @@ client.on('message', async (message) => {
     if (!userStates[numberPhone]) {
         console.log(`Novo usuário detectado: ${message.notifyName} (${numberPhone})`);
         
-        userStates[numberPhone] = { awaitingResponse: true, awaitingConfirmation: false, awaitingEndService: false };
+        userStates[numberPhone] = { awaitingResponse: true, awaitingConfirmation: false, awaitingEndService: false, timeoutId: null };
 
         const phoneExist = await existingPhone(numberPhone);
 
@@ -82,8 +92,12 @@ client.on('message', async (message) => {
 
         console.log("Usuário agora não está mais aguardando resposta inicial.");
         
+        resetTimeout(numberPhone, message);
+        
         return;  
     }
+
+    resetTimeout(numberPhone, message);
 
     if (userStates[numberPhone].awaitingConfirmation ) {
         if (message.body.toLowerCase() === 'sim') {
@@ -91,29 +105,22 @@ client.on('message', async (message) => {
             setTimeout(() => {
                 message.reply(QUESTION);
             }, 1000);
-        
         }
         else if (message.body.toLowerCase().trim().startsWith('digair')) {
-            console.log("Entrou na IA");
-        
             const userMessage = message.body.slice(3).trim();
-        
-            console.log(userMessage);
             try {
                 const reply = await ia(userMessage);
-                console.log(reply);
                 message.reply(reply);
                 setTimeout(() => {
                     message.reply(CONTINUE_MESSAGE);
                 }, 1000);
             } catch (error) {
-                console.error("Erro ao processar a IA:", error);
                 message.reply("Ocorreu um erro ao processar sua solicitação. Tente novamente mais tarde.");
             }
         } else if (message.body.toLowerCase() === 'finalizar' || message.body.toLowerCase() === 'f' || message.body === '0') {
             userStates[numberPhone].awaitingConfirmation = false;
             userStates[numberPhone].awaitingEndService = true;
-            message.reply(EVALUATION_MESSAGE)
+            message.reply(EVALUATION_MESSAGE);
             return;
         } else if (/^[0-8]$/.test(message.body)) {
             switchMessage(message, message.body);
@@ -123,45 +130,35 @@ client.on('message', async (message) => {
             return;
         } else if (!message.body.toLowerCase().trim().startsWith('digair')) {
             message.reply(INVALID_MESSAGE);
-            console.log("entrou aqui no continue")
         }
         return;
     }
 
     if (message.body.toLowerCase().trim().startsWith('digair')) {
-        console.log("Entrou na IA");
-    
         const userMessage = message.body.slice(3).trim();
-    
-        console.log(userMessage);
         try {
             const reply = await ia(userMessage);
-            console.log(reply);
             message.reply(reply);
         } catch (error) {
-            console.error("Erro ao processar a IA:", error);
             message.reply("Ocorreu um erro ao processar sua solicitação. Tente novamente mais tarde.");
         }
     }
-    if (/^[0-8]$/.test(message.body) && userStates[numberPhone].awaitingEndService ===  false) {
+    if (/^[0-8]$/.test(message.body) && userStates[numberPhone].awaitingEndService === false) {
         if (!(message.body === '0')) {
             switchMessage(message, message.body);
         }
-        
         if (message.body === '0') {
             userStates[numberPhone].awaitingConfirmation = false;
             userStates[numberPhone].awaitingEndService = true;
-            message.reply(EVALUATION_MESSAGE)
+            message.reply(EVALUATION_MESSAGE);
             return;
         }
     } 
     if (!userStates[numberPhone]) {
-        userStates[numberPhone] = { awaitingResponse: true, awaitingConfirmation: false, awaitingEndService: false };
+        userStates[numberPhone] = { awaitingResponse: true, awaitingConfirmation: false, awaitingEndService: false, timeoutId: null };
         return;
     }
-    
     if (userStates[numberPhone].awaitingResponse) {
-        console.log("Usuário aguardando resposta inicial");
         return;
     } else if (
         !message.body.toLowerCase().startsWith('digair') && 
@@ -170,7 +167,6 @@ client.on('message', async (message) => {
         userStates[numberPhone].awaitingEndService ===  false) 
     {
         message.reply(INVALID_MESSAGE);
-        console.log("entrou no final");
     }
 
     if (userStates[numberPhone].awaitingEndService === true) {
