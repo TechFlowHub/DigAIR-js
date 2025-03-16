@@ -1,8 +1,11 @@
 const qrcode = require('qrcode-terminal');
 const { Client, LocalAuth } = require('whatsapp-web.js');
+const { ia } = require('./groqIA/groq');
+
 const { QUESTION, RESP_QUESTION_1, RESP_QUESTION_2, RESP_QUESTION_3, RESP_QUESTION_4, RESP_QUESTION_5, RESP_QUESTION_6, RESP_QUESTION_7, RESP_QUESTION_8, RESP_QUESTION_9, RESP_QUESTION_0 } = require('./messages/Questions');
-const { OPTION_CONTINUE_ERROR, CONTINUE_MESSAGE, INVALID_MESSAGE, FIRST_MESSAGE } = require('./messages/Menus');
-const {ia} = require('./groqIA/groq')
+const { OPTION_CONTINUE_ERROR, CONTINUE_MESSAGE, INVALID_MESSAGE, FIRST_MESSAGE, EVALUATION_MESSAGE, EVALUATION_ERROR, EVALUATION_THANKS } = require('./messages/Menus');
+const { savePhoneNumber, saveEvaluation, existingPhone } = require('./services/databaseService');
+
 const client = new Client({ authStrategy: new LocalAuth() });
 let userStates = {}; 
 
@@ -36,35 +39,16 @@ onlyNumbers = (string) => {
 
 const switchMessage = (message, text) => {
     switch (text) {
-        case '1':
-            message.reply(RESP_QUESTION_1);
-            break;
-        case '2':
-            message.reply(RESP_QUESTION_2);
-            break;
-        case '3':
-            message.reply(RESP_QUESTION_3);
-            break;
-        case '4':
-            message.reply(RESP_QUESTION_4);
-            break;
-        case '5':
-            message.reply(RESP_QUESTION_5);
-            break;
-        case '6':
-            message.reply(RESP_QUESTION_6);
-            break;
-        case '7':
-            message.reply(RESP_QUESTION_7);
-            break;
-        case '8':
-            message.reply(RESP_QUESTION_8);
-            break;
-        case '0':
-            message.reply(RESP_QUESTION_0);
-            break;
-        default:
-            message.reply(INVALID_MESSAGE);
+        case '1': message.reply(RESP_QUESTION_1); break;
+        case '2': message.reply(RESP_QUESTION_2); break;
+        case '3': message.reply(RESP_QUESTION_3); break;
+        case '4': message.reply(RESP_QUESTION_4); break;
+        case '5': message.reply(RESP_QUESTION_5); break;
+        case '6': message.reply(RESP_QUESTION_6); break;
+        case '7': message.reply(RESP_QUESTION_7); break;
+        case '8': message.reply(RESP_QUESTION_8); break;
+        case '0': message.reply(RESP_QUESTION_0); break;
+        default: message.reply(INVALID_MESSAGE);
     }
 };
 
@@ -74,7 +58,12 @@ client.on('message', async (message) => {
     if (!userStates[numberPhone]) {
         userStates[numberPhone] = { awaitingResponse: true, awaitingConfirmation: false};
 
-        console.log(`Novo usuário cadastrado: ${message.notifyName}`);
+        const phoneExist = await existingPhone(numberPhone);
+
+        if (!phoneExist) {
+            await savePhoneNumber(numberPhone);
+            console.log(`Novo usuário cadastrado: ${message.notifyName}`);
+        }
 
         message.reply(FIRST_MESSAGE);
         setTimeout(() => {
@@ -122,17 +111,16 @@ client.on('message', async (message) => {
         }
     }
     if (/^[0-8]$/.test(message.body)) {
-        if (message.body !== '8') {
-            switchMessage(message, message.body);
-        } else if (message.body === '0') {
+        switchMessage(message, message.body);
+        
+        if (message.body === '0') {
             delete userStates[numberPhone];
             console.log(message.body);
         }
     } 
 
-    if(message.body.toLowerCase().startsWith === '/ia'){
+    if (message.body.toLowerCase().startsWith === '/ia'){
         message.reply(INVALID_MESSAGE);
-
     }
     
     userStates[numberPhone].awaitingConfirmation = true;

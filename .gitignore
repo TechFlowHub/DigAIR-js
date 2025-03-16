@@ -1,4 +1,4 @@
 node_modules
 .wwebjs_cache
 .wwebjs_auth
-src/database/database.js
+src/config/database.js

@@ -18,3 +18,22 @@ exports.OPTION_CONTINUE_ERROR = `
 🌟 Gostaria de ver o painel de opções novamente?\n
 Por favor digite [SIM] para *SIM*, [F] para *FINALIZAR* o atendimento 👇😊, escolha uma nova opção entre *1 e 8* ou use o */ia*.
 `
+
+exposts.EVALUATION_MESSAGE = `
+⭐ Avalie nosso atendimento! Escolha um número de *1 a 5*:\n
+*5 - 🤩 Excelente*
+*4 - 😃 Bom*
+*3 - 😐 Regular*
+*2 - 🙁 Ruim*
+*1 - 😞 Péssimo*
+`
+
+exposts.EVALUATION_THANKS = `
+🌟 *Obrigado pela avaliação!* 🌟\n
+Sua opinião é muito importante para nós! 🚀💡\n
+Se precisar de mais alguma coisa, estamos à disposição! 😊
+`
+
+exports.EVALUATION_ERROR = `
+⚠️ *Opção inválida!* Por favor, escolha uma nota de *1 a 5* para avaliar nosso atendimento.
+`   
