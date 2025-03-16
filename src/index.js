@@ -2,8 +2,8 @@ const qrcode = require('qrcode-terminal');
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const { ia } = require('./groqIA/groq');
 
-const { QUESTION, RESP_QUESTION_1, RESP_QUESTION_2, RESP_QUESTION_3, RESP_QUESTION_4, RESP_QUESTION_5, RESP_QUESTION_6, RESP_QUESTION_7, RESP_QUESTION_8, RESP_QUESTION_9, RESP_QUESTION_0 } = require('./messages/Questions');
-const { OPTION_CONTINUE_ERROR, CONTINUE_MESSAGE, INVALID_MESSAGE, FIRST_MESSAGE, FIRST_MESSAGE_REPEAT, EVALUATION_MESSAGE, EVALUATION_ERROR, EVALUATION_THANKS } = require('./messages/Menus');
+const { QUESTION, RESP_QUESTION_1, RESP_QUESTION_2, RESP_QUESTION_3, RESP_QUESTION_4, RESP_QUESTION_5, RESP_QUESTION_6, RESP_QUESTION_7, RESP_QUESTION_8 } = require('./messages/Questions');
+const { CONTINUE_MESSAGE, INVALID_MESSAGE, FIRST_MESSAGE, FIRST_MESSAGE_REPEAT, EVALUATION_MESSAGE, EVALUATION_ERROR, EVALUATION_THANKS } = require('./messages/Menus');
 const { savePhoneNumber, saveEvaluation, existingPhone, saveRepeatOffenderPhone } = require('./services/databaseService');
 
 const client = new Client({ authStrategy: new LocalAuth() });
@@ -47,7 +47,6 @@ const switchMessage = (message, text) => {
         case '6': message.reply(RESP_QUESTION_6); break;
         case '7': message.reply(RESP_QUESTION_7); break;
         case '8': message.reply(RESP_QUESTION_8); break;
-        case '0': message.reply(RESP_QUESTION_0); break;
         default: message.reply(INVALID_MESSAGE);
     }
 };
@@ -56,7 +55,7 @@ client.on('message', async (message) => {
     let numberPhone = onlyNumbers(message.from);
 
     if (!userStates[numberPhone]) {
-        userStates[numberPhone] = { awaitingResponse: true, awaitingConfirmation: false};
+        userStates[numberPhone] = { awaitingResponse: true, awaitingConfirmation: false, teste: false };
 
         const phoneExist = await existingPhone(numberPhone);
 
@@ -104,8 +103,9 @@ client.on('message', async (message) => {
             }
         } else if (message.body.toLowerCase() === 'finalizar' || message.body.toLowerCase() === 'f' || message.body === '0') {
             userStates[numberPhone].awaitingConfirmation = false;
-            message.reply(RESP_QUESTION_0);
-            delete userStates[numberPhone];
+            userStates[numberPhone].teste = true;
+            message.reply(EVALUATION_MESSAGE)
+            return;
         } else if (/^[0-8]$/.test(message.body)) {
             switchMessage(message, message.body);
             setTimeout(() => {
@@ -134,12 +134,15 @@ client.on('message', async (message) => {
             message.reply("Ocorreu um erro ao processar sua solicitação. Tente novamente mais tarde.");
         }
     }
-    if (/^[0-8]$/.test(message.body)) {
-        switchMessage(message, message.body);
+    if (/^[0-8]$/.test(message.body) && userStates[numberPhone].teste ===  false) {
+        if (!(message.body === '0')) {
+            switchMessage(message, message.body);
+        }
         
         if (message.body === '0') {
-            delete userStates[numberPhone];
-            console.log(message.body);
+            userStates[numberPhone].awaitingConfirmation = false;
+            userStates[numberPhone].teste = true;
+            message.reply(EVALUATION_MESSAGE)
             return;
         }
     } 
@@ -153,15 +156,26 @@ client.on('message', async (message) => {
         return;
     }
     
-    if (!message.body.toLowerCase().startsWith('digair') && !(/^[0-8]$/.test(message.body)) && userStates[numberPhone].awaitingResponse ===  false) {
+    if (!message.body.toLowerCase().startsWith('digair') && !(/^[0-8]$/.test(message.body)) && userStates[numberPhone].awaitingResponse ===  false && userStates[numberPhone].teste ===  false) {
         message.reply(INVALID_MESSAGE);
         console.log("entrou no final");
     }
-    
+
+    if (userStates[numberPhone].teste === true) {
+        if (/^[1-5]$/.test(message.body)) {
+            await saveEvaluation(numberPhone, message.body);
+            message.reply(EVALUATION_THANKS);
+            delete userStates[numberPhone];
+            return;
+        } else {
+            message.reply(EVALUATION_ERROR);
+            return;
+        }
+    }
+
     userStates[numberPhone].awaitingConfirmation = true;
 
     setTimeout(() => {
         message.reply(CONTINUE_MESSAGE);
     }, 1000);
-    
 });
