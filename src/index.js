@@ -135,6 +135,7 @@ client.on('message', async (message) => {
         if (message.body === '0') {
             delete userStates[numberPhone];
             console.log(message.body);
+            return;
         }
     } 
 
