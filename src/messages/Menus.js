@@ -10,11 +10,11 @@ exports.INVALID_MESSAGE = `
 
 exports.CONTINUE_MESSAGE = `
 🌟 Gostaria de ver o painel de opções novamente?\n
-Digite [SIM] para *SIM*, [F] para *FINALIZAR* o atendimento 👇😊, ou escolha uma nova opção entre *1 e 9*.
+Digite [SIM] para *SIM*, [F] para *FINALIZAR* o atendimento 👇😊, escolha uma nova opção entre *1 e 8* ou use o */ia*.
 `
 
 exports.OPTION_CONTINUE_ERROR = `
 ⚠️ *Opção inválida!*\n
 🌟 Gostaria de ver o painel de opções novamente?\n
-Por favor digite [SIM] para *SIM*, [F] para *FINALIZAR* o atendimento 👇😊, ou escolha uma nova opção entre *1 e 9*.
+Por favor digite [SIM] para *SIM*, [F] para *FINALIZAR* o atendimento 👇😊, escolha uma nova opção entre *1 e 8* ou use o */ia*.
 `
