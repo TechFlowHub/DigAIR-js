@@ -143,10 +143,19 @@ client.on('message', async (message) => {
             return;
         }
     } 
-
-    if (!message.body.toLowerCase().startsWith('digair') && !(/^[0-8]$/.test(message.body))) {
+    if (!userStates[numberPhone]) {
+        userStates[numberPhone] = { awaitingResponse: true, awaitingConfirmation: false };
+        return;
+    }
+    
+    if (userStates[numberPhone].awaitingResponse) {
+        console.log("Usuário aguardando resposta inicial");
+        return;
+    }
+    
+    if (!message.body.toLowerCase().startsWith('digair') && !(/^[0-8]$/.test(message.body)) && userStates[numberPhone].awaitingResponse ===  false) {
         message.reply(INVALID_MESSAGE);
-        console.log("entrou no final")
+        console.log("entrou no final");
     }
     
     userStates[numberPhone].awaitingConfirmation = true;
