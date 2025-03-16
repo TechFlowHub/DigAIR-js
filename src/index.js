@@ -98,7 +98,7 @@ client.on('message', async (message) => {
                 console.error("Erro ao processar a IA:", error);
                 message.reply("Ocorreu um erro ao processar sua solicitação. Tente novamente mais tarde.");
             }
-        } else if (message.body.toLowerCase() === 'finalizar' || message.body.toLowerCase() === 'f') {
+        } else if (message.body.toLowerCase() === 'finalizar' || message.body.toLowerCase() === 'f' || message.body === '0') {
             userStates[numberPhone].awaitingConfirmation = false;
             message.reply(RESP_QUESTION_0);
             delete userStates[numberPhone];
@@ -110,6 +110,7 @@ client.on('message', async (message) => {
             return;
         } else if (!message.body.toLowerCase().trim().startsWith('digair')) {
             message.reply(INVALID_MESSAGE);
+            console.log("entrou aqui no continue")
         }
         return;
     }
@@ -139,8 +140,9 @@ client.on('message', async (message) => {
         }
     } 
 
-    if (!message.body.toLowerCase().startsWith('digair')) {
+    if (!message.body.toLowerCase().startsWith('digair') && !(/^[0-8]$/.test(message.body))) {
         message.reply(INVALID_MESSAGE);
+        console.log("entrou no final")
     }
     
     userStates[numberPhone].awaitingConfirmation = true;
