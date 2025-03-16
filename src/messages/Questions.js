@@ -1,5 +1,5 @@
-exports.QUESTION = `📢 Escolha uma opção! Digite um número de *1 a 9* para sua dúvida ou *0 para encerrar* o atendimento.\n
-🚀 Para usar nossa ia basta digitar /digair com sua pergunta exemplo: */ia quem deve pagar imposto de renda?* 🤖💬\n
+exports.QUESTION = `📢 Escolha uma opção! Digite um número de *1 a 8* para sua dúvida ou *0 para encerrar* o atendimento.\n
+🚀 Para usar nossa ia basta digitar digair com sua pergunta exemplo: *digair quem deve pagar imposto de renda?* 🤖💬\n
 *1* - 💰 Quem deve declarar o Imposto de Renda em 2025\n
 *2* - 🛑 Quem NÃO precisa declarar o Imposto de Renda em 2025?\n
 *3* - 📌 Para que serve o Imposto de Renda e por que ele é cobrado?\n
@@ -8,7 +8,7 @@ exports.QUESTION = `📢 Escolha uma opção! Digite um número de *1 a 9* para 
 *6* - 🏡 Declarar meu patrimônio vai aumentar meu imposto?\n
 *7* - 📝 Como declarar o Imposto de Renda?\n
 *8* - 🏠 Tenho mais de uma casa, preciso declarar todas?\n
-*/digair* - 🤖 Digite */digair e sua pergunta* para fazer perguntas para nossa inteligencia artificial\n
+*digair* - 🤖 Digite *digair e sua pergunta* para fazer perguntas para nossa inteligencia artificial\n
 *0* - 👋 Para finalizar atendimento`;
 
 exports.RESP_QUESTION_1 = `✅ *Quem deve declarar o Imposto de Renda em 2025?*\n

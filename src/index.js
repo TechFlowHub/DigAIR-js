@@ -81,7 +81,7 @@ client.on('message', async (message) => {
             }, 1000);
         
         }
-        else if (message.body.toLowerCase().startsWith('/digair')) {
+        else if (message.body.toLowerCase().trim().startsWith('digair')) {
             console.log("Entrou na IA");
         
             const userMessage = message.body.slice(3).trim();
@@ -108,14 +108,13 @@ client.on('message', async (message) => {
                 message.reply(CONTINUE_MESSAGE);
             }, 1000);
             return;
-        } else if (message.body.toLowerCase().startsWith === '/digair'){
-                message.reply(INVALID_MESSAGE);
-        
+        } else if (!message.body.toLowerCase().trim().startsWith('digair')) {
+            message.reply(INVALID_MESSAGE);
         }
         return;
     }
 
-    if (message.body.toLowerCase().startsWith('/digair')) {
+    if (message.body.toLowerCase().trim().startsWith('digair')) {
         console.log("Entrou na IA");
     
         const userMessage = message.body.slice(3).trim();
@@ -139,7 +138,7 @@ client.on('message', async (message) => {
         }
     } 
 
-    if (message.body.toLowerCase().startsWith === '/digair'){
+    if (!message.body.toLowerCase().startsWith('digair')) {
         message.reply(INVALID_MESSAGE);
     }
     

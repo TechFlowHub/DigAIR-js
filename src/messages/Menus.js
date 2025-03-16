@@ -5,18 +5,18 @@ Pergunte o que quiser e eu te responderei rapidinho. Vamos começar? 😃👇
 `
 
 exports.INVALID_MESSAGE = `
-⚠️ *Opção inválida!* Por favor, digite um número de *1 a 9* para escolher uma pergunta ou *0 para encerrar* o atendimento.
+⚠️ *Opção inválida!* Por favor, digite um número de *1 a 8* para escolher uma pergunta, *0 para encerrar* o atendimento ou *digair*.
 `
 
 exports.CONTINUE_MESSAGE = `
 🌟 Gostaria de ver o painel de opções novamente?\n
-Digite [SIM] para *SIM*, [F] para *FINALIZAR* o atendimento 👇😊, escolha uma nova opção entre *1 e 8* ou use o */digair*.
+Digite [SIM] para *SIM*, [F] para *FINALIZAR* o atendimento 👇😊, escolha uma nova opção entre *1 e 8* ou use o *digair*.
 `
 
 exports.OPTION_CONTINUE_ERROR = `
 ⚠️ *Opção inválida!*\n
 🌟 Gostaria de ver o painel de opções novamente?\n
-Por favor digite [SIM] para *SIM*, [F] para *FINALIZAR* o atendimento 👇😊, escolha uma nova opção entre *1 e 8* ou use o */digair*.
+Por favor digite [SIM] para *SIM*, [F] para *FINALIZAR* o atendimento 👇😊, escolha uma nova opção entre *1 e 8* ou use o *digair*.
 `
 
 exports.EVALUATION_MESSAGE = `
