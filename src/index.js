@@ -3,8 +3,8 @@ const { Client, LocalAuth } = require('whatsapp-web.js');
 const { ia } = require('./groqIA/groq');
 
 const { QUESTION, RESP_QUESTION_1, RESP_QUESTION_2, RESP_QUESTION_3, RESP_QUESTION_4, RESP_QUESTION_5, RESP_QUESTION_6, RESP_QUESTION_7, RESP_QUESTION_8, RESP_QUESTION_9, RESP_QUESTION_0 } = require('./messages/Questions');
-const { OPTION_CONTINUE_ERROR, CONTINUE_MESSAGE, INVALID_MESSAGE, FIRST_MESSAGE, EVALUATION_MESSAGE, EVALUATION_ERROR, EVALUATION_THANKS } = require('./messages/Menus');
-const { savePhoneNumber, saveEvaluation, existingPhone } = require('./services/databaseService');
+const { OPTION_CONTINUE_ERROR, CONTINUE_MESSAGE, INVALID_MESSAGE, FIRST_MESSAGE, FIRST_MESSAGE_REPEAT, EVALUATION_MESSAGE, EVALUATION_ERROR, EVALUATION_THANKS } = require('./messages/Menus');
+const { savePhoneNumber, saveEvaluation, existingPhone, saveRepeatOffenderPhone } = require('./services/databaseService');
 
 const client = new Client({ authStrategy: new LocalAuth() });
 let userStates = {}; 
@@ -63,9 +63,13 @@ client.on('message', async (message) => {
         if (!phoneExist) {
             await savePhoneNumber(numberPhone);
             console.log(`Novo usuário cadastrado: ${message.notifyName}`);
+            message.reply(FIRST_MESSAGE);
+        } else {
+            await saveRepeatOffenderPhone(numberPhone);
+            console.log(`Usuário já existente salvo no novo bd: ${message.notifyName}`);
+            message.reply(FIRST_MESSAGE_REPEAT);
         }
-
-        message.reply(FIRST_MESSAGE);
+        
         setTimeout(() => {
             message.reply(QUESTION);
         }, 500);

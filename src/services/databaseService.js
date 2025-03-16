@@ -1,5 +1,6 @@
 const Phone = require('../models/Phone');
 const Evaluation = require('../models/Evaluation');
+const RepeatOffenderPhone = require('../models/RepeatOffenderPhone');
 
 // Salvar número de telefone no banco
 async function savePhoneNumber(phone) {
@@ -30,6 +31,26 @@ async function existingPhone(phone) {
     }
 }
 
+// Salvar número de telefone reincidente
+async function saveRepeatOffenderPhone(phone) {
+    try {
+        const user = await Phone.findOne({ where: { phone } });
+
+        if (!user) {
+            console.error('Número não encontrado');
+            return null;
+        }
+
+        console.log(phone)
+
+        const repeat_offender_phone = await RepeatOffenderPhone.create({ fk_phone: user.id });
+        console.log(`Número de telefone ${phone} salvo como reincidente`);
+        return repeat_offender_phone;
+    } catch (error) {
+        console.error('Erro ao salvar número:', error);
+    }
+}
+
 // Salvar avaliação
 async function saveEvaluation(phone, rating) {
     try {
@@ -48,4 +69,4 @@ async function saveEvaluation(phone, rating) {
     }
 }
 
-module.exports = { savePhoneNumber, saveEvaluation, existingPhone };
+module.exports = { savePhoneNumber, saveEvaluation, existingPhone, saveRepeatOffenderPhone };
