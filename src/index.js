@@ -55,7 +55,7 @@ client.on('message', async (message) => {
     let numberPhone = onlyNumbers(message.from);
 
     if (!userStates[numberPhone]) {
-        userStates[numberPhone] = { awaitingResponse: true, awaitingConfirmation: false, teste: false };
+        userStates[numberPhone] = { awaitingResponse: true, awaitingConfirmation: false, awaitingEndService: false };
 
         const phoneExist = await existingPhone(numberPhone);
 
@@ -76,7 +76,7 @@ client.on('message', async (message) => {
         return;
     }
 
-    if (userStates[numberPhone].awaitingConfirmation) {
+    if (userStates[numberPhone].awaitingConfirmation ) {
         if (message.body.toLowerCase() === 'sim') {
             userStates[numberPhone].awaitingConfirmation = false;
             setTimeout(() => {
@@ -103,7 +103,7 @@ client.on('message', async (message) => {
             }
         } else if (message.body.toLowerCase() === 'finalizar' || message.body.toLowerCase() === 'f' || message.body === '0') {
             userStates[numberPhone].awaitingConfirmation = false;
-            userStates[numberPhone].teste = true;
+            userStates[numberPhone].awaitingEndService = true;
             message.reply(EVALUATION_MESSAGE)
             return;
         } else if (/^[0-8]$/.test(message.body)) {
@@ -134,34 +134,37 @@ client.on('message', async (message) => {
             message.reply("Ocorreu um erro ao processar sua solicitação. Tente novamente mais tarde.");
         }
     }
-    if (/^[0-8]$/.test(message.body) && userStates[numberPhone].teste ===  false) {
+    if (/^[0-8]$/.test(message.body) && userStates[numberPhone].awaitingEndService ===  false) {
         if (!(message.body === '0')) {
             switchMessage(message, message.body);
         }
         
         if (message.body === '0') {
             userStates[numberPhone].awaitingConfirmation = false;
-            userStates[numberPhone].teste = true;
+            userStates[numberPhone].awaitingEndService = true;
             message.reply(EVALUATION_MESSAGE)
             return;
         }
     } 
     if (!userStates[numberPhone]) {
-        userStates[numberPhone] = { awaitingResponse: true, awaitingConfirmation: false };
+        userStates[numberPhone] = { awaitingResponse: true, awaitingConfirmation: false, awaitingEndService: false };
         return;
     }
     
     if (userStates[numberPhone].awaitingResponse) {
         console.log("Usuário aguardando resposta inicial");
         return;
-    }
-    
-    if (!message.body.toLowerCase().startsWith('digair') && !(/^[0-8]$/.test(message.body)) && userStates[numberPhone].awaitingResponse ===  false && userStates[numberPhone].teste ===  false) {
+    } else if (
+        !message.body.toLowerCase().startsWith('digair') && 
+        !(/^[0-8]$/.test(message.body)) && 
+        userStates[numberPhone].awaitingResponse === false && 
+        userStates[numberPhone].awaitingEndService ===  false) 
+    {
         message.reply(INVALID_MESSAGE);
         console.log("entrou no final");
     }
 
-    if (userStates[numberPhone].teste === true) {
+    if (userStates[numberPhone].awaitingEndService === true) {
         if (/^[1-5]$/.test(message.body)) {
             await saveEvaluation(numberPhone, message.body);
             message.reply(EVALUATION_THANKS);
