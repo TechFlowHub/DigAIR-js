@@ -55,25 +55,34 @@ client.on('message', async (message) => {
     let numberPhone = onlyNumbers(message.from);
 
     if (!userStates[numberPhone]) {
+        console.log(`Novo usuário detectado: ${message.notifyName} (${numberPhone})`);
+        
         userStates[numberPhone] = { awaitingResponse: true, awaitingConfirmation: false, awaitingEndService: false };
 
         const phoneExist = await existingPhone(numberPhone);
 
         if (!phoneExist) {
             await savePhoneNumber(numberPhone);
-            console.log(`Novo usuário cadastrado: ${message.notifyName}`);
-            message.reply(FIRST_MESSAGE);
+            console.log(`Usuário registrado no banco de dados: ${message.notifyName}`);
+            await message.reply(FIRST_MESSAGE);  
         } else {
             await saveRepeatOffenderPhone(numberPhone);
             console.log(`Usuário já existente salvo no novo bd: ${message.notifyName}`);
-            message.reply(FIRST_MESSAGE_REPEAT);
+            await message.reply(FIRST_MESSAGE_REPEAT);  
         }
         
-        setTimeout(() => {
-            message.reply(QUESTION);
-        }, 500);
+        console.log("ANTES de enviar QUESTION");
+
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        console.log("ENVIANDO QUESTION...");
+        await message.reply(QUESTION);
+
         userStates[numberPhone].awaitingResponse = false;
-        return;
+
+        console.log("Usuário agora não está mais aguardando resposta inicial.");
+        
+        return;  
     }
 
     if (userStates[numberPhone].awaitingConfirmation ) {
