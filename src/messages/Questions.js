@@ -64,8 +64,7 @@ exports.RESP_QUESTION_5 = `📌 **Tabela do Imposto de Renda 2025**\n
 💰 De *R$ 2.826,66 a R$ 3.751,05* ➝ *15%* de imposto\n
 💰 De *R$ 3.751,06 a R$ 4.664,68* ➝ *22,5%* de imposto\n
 💰 Acima de *R$ 4.664,68* ➝ *27,5%* de imposto\n
-⚠️ **Atenção!** A tabela foi ajustada, mas deveria ter sido mais compatível com a inflação, o que faz com que mais pessoas acabem pagando imposto devido aos reajustes salariais. 📉\n
-❗ Existe uma proposta para aumentar a faixa de isenção para *R$ 5.000*, mas até o momento *não há confirmação oficial* pela Receita Federal. 🚨`;
+⚠️ **Atenção!** A tabela foi ajustada, mas deveria ter sido mais compatível com a inflação, o que faz com que mais pessoas acabem pagando imposto devido aos reajustes salariais. 📉\n`;
 
 exports.RESP_QUESTION_6 = `"🏡 *Declarar meu patrimônio vai aumentar meu imposto?*\n
 🧐 *Não necessariamente!* O Imposto de Renda incide sobre a sua renda (salários, aluguéis, investimentos), não sobre os bens que você possui.\n
