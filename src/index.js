@@ -157,7 +157,8 @@ client.on('message', async (message) => {
     if (
         !message.body.toLowerCase().startsWith('digair') && 
         !(/^[0-8]$/.test(message.body)) &&
-        sendFirstMessage[numberPhone] === false)
+        sendFirstMessage[numberPhone] === false && 
+        userStates[numberPhone].awaitingEndService === false)
         
     {
         message.reply(INVALID_MESSAGE);
