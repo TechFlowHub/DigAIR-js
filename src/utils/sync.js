@@ -6,9 +6,9 @@ const RepeatOffenderPhone = require('../models/RepeatOffenderPhone');
 async function syncDatabase() {
     try {
         await sequelize.sync({ alter: true });
-        console.log('Tabelas sincronizadas com sucesso!');
+        console.log('✅ Tabelas sincronizadas com sucesso!');
     } catch (error) {
-        console.error('Erro ao sincronizar tabelas:', error);
+        console.error('❌ Erro ao sincronizar tabelas:', error);
     } finally {
         await sequelize.close();
     }
