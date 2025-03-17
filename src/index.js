@@ -16,7 +16,7 @@ client.on('qr', (qr) => {
 });
 
 client.on('ready', () => {
-    console.log('Client is ready!');
+    console.log('✅ Client is ready!');
     io.emit('ready');
 });
 
@@ -43,11 +43,11 @@ const resetTimeout = (numberPhone, message) => {
         clearTimeout(userStates[numberPhone].timeoutId);
     }
     userStates[numberPhone].timeoutId = setTimeout(() => {
-        message.reply("Atendimento finalizado por inatividade");
-        console.log(`Mensagem enviada para ${numberPhone}: "Você está aí?"`);
+        message.reply("⚠️ Opa! Não recebemos sua resposta há um tempo... O atendimento foi finalizado por inatividade. ⏳ Caso precise de algo, é só chamar! 😊");
+
         delete userStates[numberPhone];
         delete sendFirstMessage[numberPhone]; 
-    }, 42000);
+    }, 480000);
 };
 
 const switchMessage = (message, text) => {
@@ -68,34 +68,25 @@ client.on('message', async (message) => {
     let numberPhone = onlyNumbers(message.from);
 
     if (!userStates[numberPhone]) {
-        console.log(`Novo usuário detectado: ${message.notifyName} (${numberPhone})`);
-        
         userStates[numberPhone] = { awaitingResponse: true, awaitingConfirmation: false, awaitingEndService: false, timeoutId: null };
 
         const phoneExist = await existingPhone(numberPhone);
 
         if (!phoneExist) {
             await savePhoneNumber(numberPhone);
-            console.log(`Usuário registrado no banco de dados: ${message.notifyName}`);
             await message.reply(FIRST_MESSAGE);
             sendFirstMessage[numberPhone] = true;
         } else {
             await saveRepeatOffenderPhone(numberPhone);
-            console.log(`Usuário já existente salvo no novo bd: ${message.notifyName}`);
             await message.reply(FIRST_MESSAGE_REPEAT);
             sendFirstMessage[numberPhone] = false;
         }
-        
-        console.log("ANTES de enviar QUESTION");
 
         await new Promise(resolve => setTimeout(resolve, 500));
 
-        console.log("ENVIANDO QUESTION...");
         await message.reply(QUESTION);
 
         userStates[numberPhone].awaitingResponse = false;
-
-        console.log("Usuário agora não está mais aguardando resposta inicial.");
         
         resetTimeout(numberPhone, message);
         
@@ -119,7 +110,6 @@ client.on('message', async (message) => {
                 message.reply(reply);
                 setTimeout(() => {
                     message.reply(CONTINUE_MESSAGE);
-                    console.log("ta vindo do 1° continue message")
                 }, 1000);
             } catch (error) {
                 message.reply("Ocorreu um erro ao processar sua solicitação. Tente novamente mais tarde.");
@@ -134,12 +124,10 @@ client.on('message', async (message) => {
             switchMessage(message, message.body);
             setTimeout(() => {
                 message.reply(CONTINUE_MESSAGE);
-                console.log("ta vindo do 2° continue message")
             }, 1000);
             return;
         } else if (!message.body.toLowerCase().trim().startsWith('digair') && sendFirstMessage[numberPhone] === false) {
             message.reply(INVALID_MESSAGE);
-            console.log("entrou no invalid message do digair")
         }
         return;
     }
@@ -166,19 +154,23 @@ client.on('message', async (message) => {
             return;
         }
     } 
-    if(
+    if (
         !message.body.toLowerCase().startsWith('digair') && 
         !(/^[0-8]$/.test(message.body)) &&
         sendFirstMessage[numberPhone] === false)
         
     {
-        console.log("entrou no final")
         message.reply(INVALID_MESSAGE);
     }
 
     if (userStates[numberPhone].awaitingEndService === true) {
         if (/^[1-5]$/.test(message.body)) {
             await saveEvaluation(numberPhone, message.body);
+
+            if (userStates[numberPhone]?.timeoutId) {
+                clearTimeout(userStates[numberPhone].timeoutId);
+            }
+
             message.reply(EVALUATION_THANKS);
             delete userStates[numberPhone];
             delete sendFirstMessage[numberPhone];
@@ -194,6 +186,5 @@ client.on('message', async (message) => {
     if(sendFirstMessage[numberPhone] === false)
     setTimeout(() => {
         message.reply(CONTINUE_MESSAGE);
-        console.log("ta vindo do terceiro continue message")
     }, 1000);
 });

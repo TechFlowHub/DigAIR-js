@@ -9,12 +9,6 @@ async function savePhoneNumber(phone) {
             where: { phone }
         });
 
-        if (created) {
-            console.log(`Novo usuário cadastrado: ${phone}`);
-        } else {
-            console.log(`Usuário já existente: ${phone}`);
-        }
-
         return user;
     } catch (error) {
         console.error('Erro ao salvar número:', error);
@@ -41,10 +35,8 @@ async function saveRepeatOffenderPhone(phone) {
             return null;
         }
 
-        console.log(phone)
-
         const repeat_offender_phone = await RepeatOffenderPhone.create({ fk_phone: user.id });
-        console.log(`Número de telefone ${phone} salvo como reincidente`);
+
         return repeat_offender_phone;
     } catch (error) {
         console.error('Erro ao salvar número:', error);
@@ -62,7 +54,7 @@ async function saveEvaluation(phone, rating) {
         }
 
         const evaluation = await Evaluation.create({ fk_phone: user.id, rating });
-        console.log(`Avaliação ${rating} salva para ${phone}`);
+
         return evaluation;
     } catch (error) {
         console.error('Erro ao salvar avaliação:', error);

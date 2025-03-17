@@ -4,8 +4,7 @@ Pergunte o que quiser e eu te responderei rapidinho. Vamos começar? 😃👇`
 
 exports.FIRST_MESSAGE_REPEAT = `🟡 E aí! Quanto tempo! 😃👋\n
 Que bom te ver de novo por aqui! Pronto(a) para mais uma rodada de perguntas sobre o Imposto de Renda? 💵📄\n
-Me diz como posso te ajudar hoje! 🚀✨
-`
+Me diz como posso te ajudar hoje! 🚀✨`
 
 exports.INVALID_MESSAGE = `⚠️ *Opção inválida!* Por favor, digite um número de *1 a 8* para escolher uma pergunta, *0 para encerrar* o atendimento ou *digair*.`
 
