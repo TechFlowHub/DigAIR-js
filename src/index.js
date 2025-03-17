@@ -8,6 +8,7 @@ const { savePhoneNumber, saveEvaluation, existingPhone, saveRepeatOffenderPhone 
 
 const client = new Client({ authStrategy: new LocalAuth() });
 let userStates = {}; 
+let sendFirstMessage = {};
 
 client.on('qr', (qr) => {
     qrcode.generate(qr, { small: true });
@@ -44,6 +45,8 @@ const resetTimeout = (numberPhone, message) => {
     userStates[numberPhone].timeoutId = setTimeout(() => {
         message.reply("Atendimento finalizado por inatividade");
         console.log(`Mensagem enviada para ${numberPhone}: "Você está aí?"`);
+        delete userStates[numberPhone];
+        delete sendFirstMessage[numberPhone]; 
     }, 42000);
 };
 
@@ -57,7 +60,7 @@ const switchMessage = (message, text) => {
         case '6': message.reply(RESP_QUESTION_6); break;
         case '7': message.reply(RESP_QUESTION_7); break;
         case '8': message.reply(RESP_QUESTION_8); break;
-        default: message.reply(INVALID_MESSAGE);
+        default: console.log("entrou no default");
     }
 };
 
@@ -74,11 +77,13 @@ client.on('message', async (message) => {
         if (!phoneExist) {
             await savePhoneNumber(numberPhone);
             console.log(`Usuário registrado no banco de dados: ${message.notifyName}`);
-            await message.reply(FIRST_MESSAGE);  
+            await message.reply(FIRST_MESSAGE);
+            sendFirstMessage[numberPhone] = true;
         } else {
             await saveRepeatOffenderPhone(numberPhone);
             console.log(`Usuário já existente salvo no novo bd: ${message.notifyName}`);
-            await message.reply(FIRST_MESSAGE_REPEAT);  
+            await message.reply(FIRST_MESSAGE_REPEAT);
+            sendFirstMessage[numberPhone] = false;
         }
         
         console.log("ANTES de enviar QUESTION");
@@ -109,10 +114,12 @@ client.on('message', async (message) => {
         else if (message.body.toLowerCase().trim().startsWith('digair')) {
             const userMessage = message.body.slice(3).trim();
             try {
+                sendFirstMessage[numberPhone] = false;
                 const reply = await ia(userMessage);
                 message.reply(reply);
                 setTimeout(() => {
                     message.reply(CONTINUE_MESSAGE);
+                    console.log("ta vindo do 1° continue message")
                 }, 1000);
             } catch (error) {
                 message.reply("Ocorreu um erro ao processar sua solicitação. Tente novamente mais tarde.");
@@ -123,13 +130,16 @@ client.on('message', async (message) => {
             message.reply(EVALUATION_MESSAGE);
             return;
         } else if (/^[0-8]$/.test(message.body)) {
+            sendFirstMessage[numberPhone] = false;
             switchMessage(message, message.body);
             setTimeout(() => {
                 message.reply(CONTINUE_MESSAGE);
+                console.log("ta vindo do 2° continue message")
             }, 1000);
             return;
-        } else if (!message.body.toLowerCase().trim().startsWith('digair')) {
+        } else if (!message.body.toLowerCase().trim().startsWith('digair') && sendFirstMessage[numberPhone] === false) {
             message.reply(INVALID_MESSAGE);
+            console.log("entrou no invalid message do digair")
         }
         return;
     }
@@ -137,6 +147,7 @@ client.on('message', async (message) => {
     if (message.body.toLowerCase().trim().startsWith('digair')) {
         const userMessage = message.body.slice(3).trim();
         try {
+            sendFirstMessage[numberPhone] = false;
             const reply = await ia(userMessage);
             message.reply(reply);
         } catch (error) {
@@ -145,6 +156,7 @@ client.on('message', async (message) => {
     }
     if (/^[0-8]$/.test(message.body) && userStates[numberPhone].awaitingEndService === false) {
         if (!(message.body === '0')) {
+            sendFirstMessage[numberPhone] = false;
             switchMessage(message, message.body);
         }
         if (message.body === '0') {
@@ -154,18 +166,13 @@ client.on('message', async (message) => {
             return;
         }
     } 
-    if (!userStates[numberPhone]) {
-        userStates[numberPhone] = { awaitingResponse: true, awaitingConfirmation: false, awaitingEndService: false, timeoutId: null };
-        return;
-    }
-    if (userStates[numberPhone].awaitingResponse) {
-        return;
-    } else if (
+    if(
         !message.body.toLowerCase().startsWith('digair') && 
-        !(/^[0-8]$/.test(message.body)) && 
-        userStates[numberPhone].awaitingResponse === false && 
-        userStates[numberPhone].awaitingEndService ===  false) 
+        !(/^[0-8]$/.test(message.body)) &&
+        sendFirstMessage[numberPhone] === false)
+        
     {
+        console.log("entrou no final")
         message.reply(INVALID_MESSAGE);
     }
 
@@ -174,6 +181,7 @@ client.on('message', async (message) => {
             await saveEvaluation(numberPhone, message.body);
             message.reply(EVALUATION_THANKS);
             delete userStates[numberPhone];
+            delete sendFirstMessage[numberPhone];
             return;
         } else {
             message.reply(EVALUATION_ERROR);
@@ -183,7 +191,9 @@ client.on('message', async (message) => {
 
     userStates[numberPhone].awaitingConfirmation = true;
 
+    if(sendFirstMessage[numberPhone] === false)
     setTimeout(() => {
         message.reply(CONTINUE_MESSAGE);
+        console.log("ta vindo do terceiro continue message")
     }, 1000);
 });

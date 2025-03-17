@@ -1,8 +1,11 @@
 const qrcode = require('qrcode-terminal');
 const { Client, LocalAuth } = require('whatsapp-web.js');
-const { QUESTION, RESP_QUESTION_1, RESP_QUESTION_2, RESP_QUESTION_3, RESP_QUESTION_4, RESP_QUESTION_5, RESP_QUESTION_6, RESP_QUESTION_7, RESP_QUESTION_8, RESP_QUESTION_9, RESP_QUESTION_0 } = require('./messages/Questions');
-const { OPTION_CONTINUE_ERROR, CONTINUE_MESSAGE, INVALID_MESSAGE, FIRST_MESSAGE } = require('./messages/Menus');
-const {ia} = require('./groqIA/groq')
+const { ia } = require('./groqIA/groq');
+
+const { QUESTION, RESP_QUESTION_1, RESP_QUESTION_2, RESP_QUESTION_3, RESP_QUESTION_4, RESP_QUESTION_5, RESP_QUESTION_6, RESP_QUESTION_7, RESP_QUESTION_8 } = require('./messages/Questions');
+const { CONTINUE_MESSAGE, INVALID_MESSAGE, FIRST_MESSAGE, FIRST_MESSAGE_REPEAT, EVALUATION_MESSAGE, EVALUATION_ERROR, EVALUATION_THANKS } = require('./messages/Menus');
+const { savePhoneNumber, saveEvaluation, existingPhone, saveRepeatOffenderPhone } = require('./services/databaseService');
+
 const client = new Client({ authStrategy: new LocalAuth() });
 let userStates = {}; 
 
@@ -34,37 +37,27 @@ onlyNumbers = (string) => {
     return string.replace(/[^0-9]/g, "");
 };
 
+const resetTimeout = (numberPhone, message) => {
+    if (userStates[numberPhone]?.timeoutId) {
+        clearTimeout(userStates[numberPhone].timeoutId);
+    }
+    userStates[numberPhone].timeoutId = setTimeout(() => {
+        message.reply("Atendimento finalizado por inatividade");
+        console.log(`Mensagem enviada para ${numberPhone}: "Você está aí?"`);
+    }, 42000);
+};
+
 const switchMessage = (message, text) => {
     switch (text) {
-        case '1':
-            message.reply(RESP_QUESTION_1);
-            break;
-        case '2':
-            message.reply(RESP_QUESTION_2);
-            break;
-        case '3':
-            message.reply(RESP_QUESTION_3);
-            break;
-        case '4':
-            message.reply(RESP_QUESTION_4);
-            break;
-        case '5':
-            message.reply(RESP_QUESTION_5);
-            break;
-        case '6':
-            message.reply(RESP_QUESTION_6);
-            break;
-        case '7':
-            message.reply(RESP_QUESTION_7);
-            break;
-        case '8':
-            message.reply(RESP_QUESTION_8);
-            break;
-        case '0':
-            message.reply(RESP_QUESTION_0);
-            break;
-        default:
-            message.reply(INVALID_MESSAGE);
+        case '1': message.reply(RESP_QUESTION_1); break;
+        case '2': message.reply(RESP_QUESTION_2); break;
+        case '3': message.reply(RESP_QUESTION_3); break;
+        case '4': message.reply(RESP_QUESTION_4); break;
+        case '5': message.reply(RESP_QUESTION_5); break;
+        case '6': message.reply(RESP_QUESTION_6); break;
+        case '7': message.reply(RESP_QUESTION_7); break;
+        case '8': message.reply(RESP_QUESTION_8); break;
+        default: message.reply(INVALID_MESSAGE);
     }
 };
 
@@ -72,83 +65,125 @@ client.on('message', async (message) => {
     let numberPhone = onlyNumbers(message.from);
 
     if (!userStates[numberPhone]) {
-        userStates[numberPhone] = { awaitingResponse: true, awaitingConfirmation: false, iaState: false };
+        console.log(`Novo usuário detectado: ${message.notifyName} (${numberPhone})`);
+        
+        userStates[numberPhone] = { awaitingResponse: true, awaitingConfirmation: false, awaitingEndService: false, timeoutId: null };
 
-        console.log(`Novo usuário cadastrado: ${message.notifyName}`);
+        const phoneExist = await existingPhone(numberPhone);
 
-        message.reply(FIRST_MESSAGE);
-        setTimeout(() => {
-            message.reply(QUESTION);
-        }, 500);
+        if (!phoneExist) {
+            await savePhoneNumber(numberPhone);
+            console.log(`Usuário registrado no banco de dados: ${message.notifyName}`);
+            await message.reply(FIRST_MESSAGE);  
+        } else {
+            await saveRepeatOffenderPhone(numberPhone);
+            console.log(`Usuário já existente salvo no novo bd: ${message.notifyName}`);
+            await message.reply(FIRST_MESSAGE_REPEAT);  
+        }
+        
+        console.log("ANTES de enviar QUESTION");
+
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        console.log("ENVIANDO QUESTION...");
+        await message.reply(QUESTION);
+
         userStates[numberPhone].awaitingResponse = false;
-        return;
+
+        console.log("Usuário agora não está mais aguardando resposta inicial.");
+        
+        resetTimeout(numberPhone, message);
+        
+        return;  
     }
 
-    if (userStates[numberPhone].awaitingConfirmation && userStates[numberPhone].iaState === false) {
+    resetTimeout(numberPhone, message);
+
+    if (userStates[numberPhone].awaitingConfirmation ) {
         if (message.body.toLowerCase() === 'sim') {
             userStates[numberPhone].awaitingConfirmation = false;
             setTimeout(() => {
                 message.reply(QUESTION);
             }, 1000);
-        } else if (message.body.toLowerCase() === 'finalizar' || message.body.toLowerCase() === 'f') {
+        }
+        else if (message.body.toLowerCase().trim().startsWith('digair')) {
+            const userMessage = message.body.slice(3).trim();
+            try {
+                const reply = await ia(userMessage);
+                message.reply(reply);
+                setTimeout(() => {
+                    message.reply(CONTINUE_MESSAGE);
+                }, 1000);
+            } catch (error) {
+                message.reply("Ocorreu um erro ao processar sua solicitação. Tente novamente mais tarde.");
+            }
+        } else if (message.body.toLowerCase() === 'finalizar' || message.body.toLowerCase() === 'f' || message.body === '0') {
             userStates[numberPhone].awaitingConfirmation = false;
-            message.reply(RESP_QUESTION_0);
-            delete userStates[numberPhone];
-        } else if (/^[0-9]$/.test(message.body)) {
+            userStates[numberPhone].awaitingEndService = true;
+            message.reply(EVALUATION_MESSAGE);
+            return;
+        } else if (/^[0-8]$/.test(message.body)) {
             switchMessage(message, message.body);
             setTimeout(() => {
                 message.reply(CONTINUE_MESSAGE);
             }, 1000);
             return;
-        } else {
-            message.reply(OPTION_CONTINUE_ERROR);
+        } else if (!message.body.toLowerCase().trim().startsWith('digair')) {
+            message.reply(INVALID_MESSAGE);
         }
         return;
     }
 
-    if (/^[0-9]$/.test(message.body)) {
-        if (message.body !== '9' && userStates[numberPhone].iaState === false){
+    if (message.body.toLowerCase().trim().startsWith('digair')) {
+        const userMessage = message.body.slice(3).trim();
+        try {
+            const reply = await ia(userMessage);
+            message.reply(reply);
+        } catch (error) {
+            message.reply("Ocorreu um erro ao processar sua solicitação. Tente novamente mais tarde.");
+        }
+    }
+    if (/^[0-8]$/.test(message.body) && userStates[numberPhone].awaitingEndService === false) {
+        if (!(message.body === '0')) {
             switchMessage(message, message.body);
-        } else if (message.body === '0' && userStates[numberPhone].iaState === false) {
-            delete userStates[numberPhone];
+        }
+        if (message.body === '0') {
+            userStates[numberPhone].awaitingConfirmation = false;
+            userStates[numberPhone].awaitingEndService = true;
+            message.reply(EVALUATION_MESSAGE);
             return;
-        } else if (message.body === '9') {
-            userStates[numberPhone].iaState = true;
-            message.reply(RESP_QUESTION_9);
-            if(userStates[numberPhone].iaState === true){
-                client.on('message', async (messageIa) => {
-                    const promptIa = messageIa.body;
-                    try {
-                        const reply = await ia(promptIa);  
-                        console.log(reply);  
-                        message.reply(reply); 
-                    } catch (error) {
-                        console.error("Erro ao processar a IA:", error.message);
-                        message.reply("Desculpe, ocorreu um erro ao processar sua mensagem.");
-                    }
-                });
-            
-            }
-            else{
-                userStates[numberPhone].iaState = false;
-            }
-            
-            
-        } 
-
-        if (message.body === '0' && userStates[numberPhone].iaState === true) {
-            userStates[numberPhone].iaState = false;
-            message.reply('voce saiu da ia')
-        } 
-    } else if (userStates[numberPhone].iaState !== true) {
+        }
+    } 
+    if (!userStates[numberPhone]) {
+        userStates[numberPhone] = { awaitingResponse: true, awaitingConfirmation: false, awaitingEndService: false, timeoutId: null };
+        return;
+    }
+    if (userStates[numberPhone].awaitingResponse) {
+        return;
+    } else if (
+        !message.body.toLowerCase().startsWith('digair') && 
+        !(/^[0-8]$/.test(message.body)) && 
+        userStates[numberPhone].awaitingResponse === false && 
+        userStates[numberPhone].awaitingEndService ===  false) 
+    {
         message.reply(INVALID_MESSAGE);
     }
 
-    if (userStates[numberPhone].iaState === false) {
-        userStates[numberPhone].awaitingConfirmation = true;
-
-        setTimeout(() => {
-            message.reply(CONTINUE_MESSAGE);
-        }, 1000);
+    if (userStates[numberPhone].awaitingEndService === true) {
+        if (/^[1-5]$/.test(message.body)) {
+            await saveEvaluation(numberPhone, message.body);
+            message.reply(EVALUATION_THANKS);
+            delete userStates[numberPhone];
+            return;
+        } else {
+            message.reply(EVALUATION_ERROR);
+            return;
+        }
     }
+
+    userStates[numberPhone].awaitingConfirmation = true;
+
+    setTimeout(() => {
+        message.reply(CONTINUE_MESSAGE);
+    }, 1000);
 });

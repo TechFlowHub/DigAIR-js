@@ -42,8 +42,7 @@ exports.RESP_QUESTION_3 = `💰 *Para que serve o Imposto de Renda e por que ele
 📊 Desde *1979*, o IR é uma das principais fontes de receita do governo. Em *2021*, a arrecadação federal atingiu *R$ 1,878 trilhão*! 📈💸\n
 ⚠️ Ou seja, o imposto é essencial para manter o funcionamento do país e garantir investimentos para toda a população! 🇧🇷✅`;
 
-exports.RESP_QUESTION_4 = `
-📅 A partir deste ano, os dados de contas bancárias no exterior agora já estão incluídos na declaração pré-preenchida!\n
+exports.RESP_QUESTION_4 = `📅 A partir deste ano, os dados de contas bancárias no exterior agora já estão incluídos na declaração pré-preenchida!\n
 🌍 Isso aconteceu porque a legislação passou a tributar as offshores (empresas de investimentos no exterior) e os rendimentos no exterior.\n
 💼 Por que isso aconteceu?
 A nova lei determinou a tributação de Fundos Exclusivos e offshores, fazendo com que os rendimentos fora do Brasil sejam tributados de forma definitiva na declaração de ajuste anual, com uma alíquota de 15%.\n
