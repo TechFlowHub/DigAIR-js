@@ -35,5 +35,7 @@ RUN npm install
 
 COPY . .
 
+EXPOSE 3000
+
 # Comando para iniciar a aplicação
 CMD ["node", "src/index.js"]
