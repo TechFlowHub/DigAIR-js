@@ -6,7 +6,14 @@ const { QUESTION, RESP_QUESTION_1, RESP_QUESTION_2, RESP_QUESTION_3, RESP_QUESTI
 const { CONTINUE_MESSAGE, INVALID_MESSAGE, FIRST_MESSAGE, FIRST_MESSAGE_REPEAT, EVALUATION_MESSAGE, EVALUATION_ERROR, EVALUATION_THANKS } = require('./messages/Menus');
 const { savePhoneNumber, saveEvaluation, existingPhone, saveRepeatOffenderPhone } = require('./services/databaseService');
 
-const client = new Client({ authStrategy: new LocalAuth() });
+const client = new Client({ 
+    authStrategy: new LocalAuth(), 
+    puppeteer: { 
+        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/google-chrome-stable',
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
+    }
+});
+
 let userStates = {}; 
 let sendFirstMessage = {};
 
@@ -112,22 +119,34 @@ client.on('message', async (message) => {
                     message.reply(CONTINUE_MESSAGE);
                 }, 1000);
             } catch (error) {
-                message.reply("Ocorreu um erro ao processar sua solicitação. Tente novamente mais tarde.");
+                setTimeout(() => {
+                    message.reply("Ocorreu um erro ao processar sua solicitação. Tente novamente mais tarde.");
+                }, 1000);
             }
         } else if (message.body.toLowerCase() === 'finalizar' || message.body.toLowerCase() === 'f' || message.body === '0') {
             userStates[numberPhone].awaitingConfirmation = false;
             userStates[numberPhone].awaitingEndService = true;
-            message.reply(EVALUATION_MESSAGE);
+
+            setTimeout(() => {
+                message.reply(EVALUATION_MESSAGE);
+            }, 1000);
+
             return;
         } else if (/^[0-8]$/.test(message.body)) {
             sendFirstMessage[numberPhone] = false;
-            switchMessage(message, message.body);
+            setTimeout(() => {
+                switchMessage(message, message.body);
+            }, 1000);
+            
             setTimeout(() => {
                 message.reply(CONTINUE_MESSAGE);
             }, 1000);
+            
             return;
         } else if (!message.body.toLowerCase().trim().startsWith('digair') && sendFirstMessage[numberPhone] === false) {
-            message.reply(INVALID_MESSAGE);
+            setTimeout(() => {
+                message.reply(INVALID_MESSAGE);
+            }, 1000);
         }
         return;
     }
@@ -139,18 +158,26 @@ client.on('message', async (message) => {
             const reply = await ia(userMessage);
             message.reply(reply);
         } catch (error) {
-            message.reply("Ocorreu um erro ao processar sua solicitação. Tente novamente mais tarde.");
+            setTimeout(() => {
+                message.reply("Ocorreu um erro ao processar sua solicitação. Tente novamente mais tarde.");
+            }, 1000);
         }
     }
     if (/^[0-8]$/.test(message.body) && userStates[numberPhone].awaitingEndService === false) {
         if (!(message.body === '0')) {
             sendFirstMessage[numberPhone] = false;
-            switchMessage(message, message.body);
+            setTimeout(() => {
+                switchMessage(message, message.body);
+            }, 1000);    
         }
         if (message.body === '0') {
             userStates[numberPhone].awaitingConfirmation = false;
             userStates[numberPhone].awaitingEndService = true;
-            message.reply(EVALUATION_MESSAGE);
+            
+            setTimeout(() => {
+                message.reply(EVALUATION_MESSAGE);
+            }, 1000);
+
             return;
         }
     } 
@@ -161,7 +188,9 @@ client.on('message', async (message) => {
         userStates[numberPhone].awaitingEndService === false)
         
     {
-        message.reply(INVALID_MESSAGE);
+        setTimeout(() => {
+            message.reply(INVALID_MESSAGE);
+        }, 1000);
     }
 
     if (userStates[numberPhone].awaitingEndService === true) {
@@ -171,13 +200,16 @@ client.on('message', async (message) => {
             if (userStates[numberPhone]?.timeoutId) {
                 clearTimeout(userStates[numberPhone].timeoutId);
             }
-
-            message.reply(EVALUATION_THANKS);
+            setTimeout(() => {
+                message.reply(EVALUATION_THANKS);
+            }, 1000);
             delete userStates[numberPhone];
             delete sendFirstMessage[numberPhone];
             return;
         } else {
-            message.reply(EVALUATION_ERROR);
+            setTimeout(() => {
+                message.reply(EVALUATION_ERROR);
+            }, 1000);
             return;
         }
     }
