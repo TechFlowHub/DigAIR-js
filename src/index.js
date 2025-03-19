@@ -103,7 +103,7 @@ client.on('message', async (message) => {
     resetTimeout(numberPhone, message);
 
     if (userStates[numberPhone].awaitingConfirmation ) {
-        if (message.body.toLowerCase() === 'sim') {
+        if (message.body.toLowerCase() === 'sim' || message.body.toLowerCase() === 's') {
             userStates[numberPhone].awaitingConfirmation = false;
             setTimeout(() => {
                 message.reply(QUESTION);
@@ -115,8 +115,8 @@ client.on('message', async (message) => {
                 sendFirstMessage[numberPhone] = false;
                 const reply = await ia(userMessage);
                 message.reply(reply);
-                setTimeout(() => {
-                    message.reply(CONTINUE_MESSAGE);
+                setTimeout(async () => {
+                    await message.reply(CONTINUE_MESSAGE);
                 }, 1000);
             } catch (error) {
                 setTimeout(() => {
