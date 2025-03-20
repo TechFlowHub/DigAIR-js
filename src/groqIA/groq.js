@@ -1,19 +1,20 @@
-const axios = require('axios'); 
+const axios = require("axios");
 
 exports.ia = async (promptIa) => {
-    const url = "https://api.groq.com/openai/v1/chat/completions";  
+  const url = "https://api.groq.com/openai/v1/chat/completions";
 
-    const headers = {
-      Authorization: "Bearer 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",  
-      "Content-Type": "application/json"  
-    };
-  
-    const body = {
-      model: "llama-3.3-70b-versatile",  
-      messages: [
-        {
-          role: "system",  
-          content: `Você é um bot especializado em contabilidade. Responda apenas perguntas relacionadas a contabilidade. 
+  const headers = {
+    Authorization:
+      "Bearer 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",
+    "Content-Type": "application/json",
+  };
+
+  const body = {
+    model: "llama-3.3-70b-versatile",
+    messages: [
+      {
+        role: "system",
+        content: `Você é um bot especializado em contabilidade. Responda apenas perguntas relacionadas a contabilidade. 
                     Se a pergunta não estiver dentro deste escopo, responda com: 
                     'Sou um bot auxiliar de contabilidade. Me pergunte apenas coisas do meu escopo.'
                     Se a pergunta for algo que possa ser considerado um crime ou seja antietica explique que isso vai contra as leis e que nao podera responder, que poderia ate levar a justiça.
@@ -70,23 +71,37 @@ exports.ia = async (promptIa) => {
 
                     Simulações e Planejamento:
                         Utilizar simuladores online da Receita Federal para prever obrigações.
-                        Ajustar finanças antecipadamente para evitar dificuldades no pagamento ou aproveitar melhor a restituição.`
-        },
-        {
-          role: "user",
-          content: promptIa  
-        }
-      ]
-    };
-  
-    try {
-      const response = await axios.post(url, body, { headers });
-  
-      const reply = response.data.choices[0].message.content;
-  
-      return reply;  
-    } catch (error) {
-      console.error("Erro ao consultar a IA:", error.message);
-      throw new Error("Erro ao processar a requisição.");
-    }
+                        Ajustar finanças antecipadamente para evitar dificuldades no pagamento ou aproveitar melhor a restituição.
+
+                    Se alguém perguntar, Já posso fazer a declaração pré-preenchida? 
+
+                    Responda, A declaração pré-preenchida do Imposto de Renda 2025 estará disponível a partir de 1º de abril. Atualmente, é possível baixar o programa gerador da declaração e iniciar o preenchimento manualmente.
+
+                    Se alguém perguntar, Por que não estou conseguindo fazer a declaração pré-preenchida?
+
+                    Responda, Se você não está conseguindo utilizar a declaração pré-preenchida, alguns motivos podem estar impedindo o acesso. Aqui estão algumas razões comuns e como resolvê-las:
+
+                    1. Nível da conta Gov.br
+
+                    A declaração pré-preenchida exige que sua conta Gov.br seja de nível prata ou ouro. Se sua conta for bronze, você precisa aumentar o nível de segurança dela.  
+
+                    Outros motivos podem ser: Problemas no site ou no programa da Receita ou Pendências no seu CPF (nesse caso você precisa contar com ajuda de um profissional).`,
+      },
+      {
+        role: "user",
+        content: promptIa,
+      },
+    ],
+  };
+
+  try {
+    const response = await axios.post(url, body, { headers });
+
+    const reply = response.data.choices[0].message.content;
+
+    return reply;
+  } catch (error) {
+    console.error("Erro ao consultar a IA:", error.message);
+    throw new Error("Erro ao processar a requisição.");
+  }
 };

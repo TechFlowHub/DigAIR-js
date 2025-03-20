@@ -105,8 +105,8 @@ client.on('message', async (message) => {
     if (userStates[numberPhone].awaitingConfirmation ) {
         if (message.body.toLowerCase() === 'sim' || message.body.toLowerCase() === 's') {
             userStates[numberPhone].awaitingConfirmation = false;
-            setTimeout(() => {
-                message.reply(QUESTION);
+            setTimeout( async () => {
+                await message.reply(QUESTION);
             }, 1000);
         }
         else if (message.body.toLowerCase().trim().startsWith('digair')) {
