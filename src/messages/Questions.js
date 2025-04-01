@@ -8,6 +8,7 @@ exports.QUESTION = `📢 Escolha uma opção! Digite um número de *1 a 8* para 
 *6* - 🏡 Declarar meu patrimônio vai aumentar meu imposto?\n
 *7* - 📝 Como declarar o Imposto de Renda?\n
 *8* - 🏠 Tenho mais de uma casa, preciso declarar todas?\n
+*9* - 📍 Onde encontrar o NAF mais próximo de você?\n
 *digair* - 🤖 Digite *digair e sua pergunta* para fazer perguntas para nossa inteligencia artificial\n
 *0* - 👋 Para finalizar atendimento`;
 
@@ -92,10 +93,11 @@ exports.RESP_QUESTION_8 = `"🏠 *Tenho mais de uma casa, preciso declarar todas
 ✔️ *Por exemplo:* Se você possui uma casa de veraneio ou um imóvel para alugar, ambos devem ser informados, mesmo sem gerar renda.\n
 ⚠️ Mas, se não declarar os bens, você poderá ser enquadrado na malha fina.`;
 
-exports.RESP_QUESTION_9 = `"🚀 *USE NOSSA IA! 🤖✨*\n
-📢 *Agora você pode fazer perguntas diretamente para nossa Inteligência Artificial!* \n
-💬 Ela pode responder dúvidas sobre Imposto de Renda, finanças e muito mais! 🧠💡\n
-*Só digitar sua dúvida* e nossa IA vai te ajudar a entender tudo de forma rápida e precisa! 🔍🤖`;
+exports.RESP_QUESTION_9 = `🚀 *Encontre o NAF mais próximo de você!*\n
+📢 *A Wyden possui unidades em diversas regiões do Brasil.* Descubra a mais próxima e aproveite o suporte especializado! 🧠💡\n
+💬 *Nossos alunos e professores estão prontos para orientar e ajudar você no preenchimento do seu Imposto de Renda.*\n
+📍 *Consulte o documento com as localidades por cidade e venha nos visitar!* 🗺️🏢\n
+📞 *Entre em contato para mais informações e horários disponíveis!* 📅📲`;
 
 exports.RESP_QUESTION_0 = `📴 Atendimento encerrado, volte sempre! 😊\n
 📍 Lembre-se: para um atendimento físico, você pode ir até o Unifavip Wyden! 🏢\n
