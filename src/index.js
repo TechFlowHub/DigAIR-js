@@ -1,4 +1,6 @@
 const qrcode = require('qrcode-terminal');
+const express = require('express');
+const app = express();
 const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
 const { ia } = require('./groqIA/groq');
 
@@ -16,6 +18,15 @@ const client = new Client({
 
 let userStates = {}; 
 let sendFirstMessage = {};
+
+// Configuração da Porta 3000 para o monitoramento
+app.get('/', (req, res) => {
+    res.send('🟢 Servidor Node ativo');
+});
+
+app.listen(3000, '0.0.0.0', () => {
+    console.log('✅ Servidor de monitoramento iniciado na porta 3000');
+});
 
 client.on('qr', (qr) => {
     qrcode.generate(qr, { small: true });
