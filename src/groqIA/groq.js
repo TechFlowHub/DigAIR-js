@@ -5,7 +5,7 @@ exports.ia = async (promptIa) => {
 
   const headers = {
     Authorization:
-      "Bearer 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",
+      "Bearer Your_token_here :D",
     "Content-Type": "application/json",
   };
 
