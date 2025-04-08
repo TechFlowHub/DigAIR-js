@@ -93,6 +93,7 @@ exports.RESP_QUESTION_8 = `"🏠 *Tenho mais de uma casa, preciso declarar todas
 ✔️ *Por exemplo:* Se você possui uma casa de veraneio ou um imóvel para alugar, ambos devem ser informados, mesmo sem gerar renda.\n
 ⚠️ Mas, se não declarar os bens, você poderá ser enquadrado na malha fina.`;
 
+// Ainda está em desenvolvimento, não foi posto em produção
 exports.RESP_QUESTION_9 = `🚀 *Encontre o NAF mais próximo de você!*\n
 📢 *A Wyden possui unidades em diversas regiões do Brasil.* Descubra a mais próxima e aproveite o suporte especializado! 🧠💡\n
 💬 *Nossos alunos e professores estão prontos para orientar e ajudar você no preenchimento do seu Imposto de Renda.*\n

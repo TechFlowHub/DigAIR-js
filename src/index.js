@@ -78,6 +78,8 @@ const switchMessage = (message, text) => {
         case '6': message.reply(RESP_QUESTION_6); break;
         case '7': message.reply(RESP_QUESTION_7); break;
         case '8': message.reply(RESP_QUESTION_8); break;
+        
+        // Em desenvolvimento
         case '9': {
             const media = MessageMedia.fromFilePath('./src/pdf/teste.pdf');
             message.reply(RESP_QUESTION_9);
