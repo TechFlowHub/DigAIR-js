@@ -138,8 +138,6 @@ src/
 4. **Conecte-se via WhatsApp:**  
    Escaneie o QR Code exibido no terminal para ativar o bot.
 
----
-
 ## 🧰 Tecnologias Utilizadas
 
 - **Node.js** – Plataforma principal de desenvolvimento  
