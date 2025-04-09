@@ -50,7 +50,17 @@ services:
     networks:
       - app-network
 
-  # Nginx Service, use this only in production
+  uptime-kuma:
+    image: louislam/uptime-kuma:latest
+    container_name: uptime-kuma
+    restart: always
+    ports:
+      - "3001:3001" 
+    volumes:
+      - uptime_kuma_data:/app/data
+    networks:
+      - app-network
+
   nginx:
     image: nginx:alpine
     container_name: nginx-container
@@ -66,6 +76,7 @@ services:
 volumes:
   mysql_data:
   portainer_data:
+  uptime_kuma_data:
 
 networks:
   app-network:

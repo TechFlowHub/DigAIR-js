@@ -1,8 +1,10 @@
 const qrcode = require('qrcode-terminal');
-const { Client, LocalAuth } = require('whatsapp-web.js');
+const express = require('express');
+const app = express();
+const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
 const { ia } = require('./groqIA/groq');
 
-const { QUESTION, RESP_QUESTION_1, RESP_QUESTION_2, RESP_QUESTION_3, RESP_QUESTION_4, RESP_QUESTION_5, RESP_QUESTION_6, RESP_QUESTION_7, RESP_QUESTION_8 } = require('./messages/Questions');
+const { QUESTION, RESP_QUESTION_1, RESP_QUESTION_2, RESP_QUESTION_3, RESP_QUESTION_4, RESP_QUESTION_5, RESP_QUESTION_6, RESP_QUESTION_7, RESP_QUESTION_8, RESP_QUESTION_9 } = require('./messages/Questions');
 const { CONTINUE_MESSAGE, INVALID_MESSAGE, FIRST_MESSAGE, FIRST_MESSAGE_REPEAT, EVALUATION_MESSAGE, EVALUATION_ERROR, EVALUATION_THANKS } = require('./messages/Menus');
 const { savePhoneNumber, saveEvaluation, existingPhone, saveRepeatOffenderPhone } = require('./services/databaseService');
 
@@ -16,6 +18,15 @@ const client = new Client({
 
 let userStates = {}; 
 let sendFirstMessage = {};
+
+// Configuração da Porta 3000 para o monitoramento
+app.get('/', (req, res) => {
+    res.send('🟢 Servidor Node ativo');
+});
+
+app.listen(3000, '0.0.0.0', () => {
+    console.log('✅ Servidor de monitoramento iniciado na porta 3000');
+});
 
 client.on('qr', (qr) => {
     qrcode.generate(qr, { small: true });
@@ -67,6 +78,14 @@ const switchMessage = (message, text) => {
         case '6': message.reply(RESP_QUESTION_6); break;
         case '7': message.reply(RESP_QUESTION_7); break;
         case '8': message.reply(RESP_QUESTION_8); break;
+        
+        // Em desenvolvimento
+        case '9': {
+            const media = MessageMedia.fromFilePath('./src/pdf/teste.pdf');
+            message.reply(RESP_QUESTION_9);
+            message.reply(media);
+            break;
+        }        
         default: console.log("entrou no default");
     }
 };
@@ -132,7 +151,7 @@ client.on('message', async (message) => {
             }, 1000);
 
             return;
-        } else if (/^[0-8]$/.test(message.body)) {
+        } else if (/^[0-9]$/.test(message.body)) {
             sendFirstMessage[numberPhone] = false;
             setTimeout(() => {
                 switchMessage(message, message.body);
@@ -163,7 +182,7 @@ client.on('message', async (message) => {
             }, 1000);
         }
     }
-    if (/^[0-8]$/.test(message.body) && userStates[numberPhone].awaitingEndService === false) {
+    if (/^[0-9]$/.test(message.body) && userStates[numberPhone].awaitingEndService === false) {
         if (!(message.body === '0')) {
             sendFirstMessage[numberPhone] = false;
             setTimeout(() => {
@@ -183,7 +202,7 @@ client.on('message', async (message) => {
     } 
     if (
         !message.body.toLowerCase().startsWith('digair') && 
-        !(/^[0-8]$/.test(message.body)) &&
+        !(/^[0-9]$/.test(message.body)) &&
         sendFirstMessage[numberPhone] === false && 
         userStates[numberPhone].awaitingEndService === false)
         

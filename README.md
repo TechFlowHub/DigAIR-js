@@ -114,10 +114,29 @@ src/
    docker-compose up --build
    ```
 
-2. **Conecte-se via WhatsApp:**  
-   Escaneie o QR Code exibido no terminal para ativar o bot.
+2. **Acesse o container MySQL:**  
+   ```bash
+   docker exec -it <nome-do-container> mysql -u <usuario> -p
+   ```
 
----
+   e execute os comandos:
+   ```sql
+   CREATE DATABASE digair;
+   USE digair;
+   ```
+
+3. **Acesse o container Node.js:**  
+   ```bash
+   docker exec -it <nome-do-container> bash
+   ```
+
+   e execute o comando:
+   ```bash
+   npm run syncDatabase
+   ```
+
+4. **Conecte-se via WhatsApp:**  
+   Escaneie o QR Code exibido no terminal para ativar o bot.
 
 ## 🧰 Tecnologias Utilizadas
 
