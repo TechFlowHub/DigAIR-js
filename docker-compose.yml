@@ -58,6 +58,8 @@ services:
       - "3001:3001" 
     volumes:
       - uptime_kuma_data:/app/data
+    environment:
+      - UPTIME_KUMA_BASE=/kuma
     networks:
       - app-network
 
