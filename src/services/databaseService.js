@@ -1,6 +1,8 @@
 const Phone = require('../models/Phone');
 const Evaluation = require('../models/Evaluation');
 const RepeatOffenderPhone = require('../models/RepeatOffenderPhone');
+const Frequency = require('../models/Frequency');
+const { Op } = require('sequelize');
 
 // Salvar número de telefone no banco
 async function savePhoneNumber(phone) {
@@ -61,4 +63,45 @@ async function saveEvaluation(phone, rating) {
     }
 }
 
-module.exports = { savePhoneNumber, saveEvaluation, existingPhone, saveRepeatOffenderPhone };
+// Salvar frequência de interações
+async function saveFrequency(phone) {
+    try {
+        const user = await Phone.findOne({ where: { phone } });
+
+        if (!user) {
+            console.error('Número não encontrado para rastrear frequência');
+            return null;
+        }
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); 
+        
+        const existingFrequency = await Frequency.findOne({ 
+            where: { 
+                fk_phone: user.id,
+                created_at: {
+                    [Op.gte]: today 
+                }
+            } 
+        });
+
+        if (existingFrequency) {
+            existingFrequency.interations += 1;
+            await existingFrequency.save();
+            console.log(`Frequência atualizada para ${phone}: ${existingFrequency.interations} interações hoje`);
+            return existingFrequency;
+        } else {
+            const newFrequency = await Frequency.create({ 
+                fk_phone: user.id,
+                interations: 1,
+                created_at: new Date() 
+            });
+            console.log(`Nova entrada de frequência criada para ${phone}`);
+            return newFrequency;
+        }
+    } catch (error) {
+        console.error('Erro ao atualizar frequência:', error);
+    }
+}
+
+module.exports = { savePhoneNumber, saveEvaluation, existingPhone, saveRepeatOffenderPhone, saveFrequency };

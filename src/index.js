@@ -6,7 +6,7 @@ const { ia } = require('./groqIA/groq');
 
 const { QUESTION, RESP_QUESTION_1, RESP_QUESTION_2, RESP_QUESTION_3, RESP_QUESTION_4, RESP_QUESTION_5, RESP_QUESTION_6, RESP_QUESTION_7, RESP_QUESTION_8, RESP_QUESTION_9 } = require('./messages/Questions');
 const { CONTINUE_MESSAGE, INVALID_MESSAGE, FIRST_MESSAGE, FIRST_MESSAGE_REPEAT, EVALUATION_MESSAGE, EVALUATION_ERROR, EVALUATION_THANKS } = require('./messages/Menus');
-const { savePhoneNumber, saveEvaluation, existingPhone, saveRepeatOffenderPhone } = require('./services/databaseService');
+const { savePhoneNumber, saveEvaluation, existingPhone, saveRepeatOffenderPhone, saveFrequency } = require('./services/databaseService');
 
 const client = new Client({ 
     authStrategy: new LocalAuth(), 
@@ -84,7 +84,9 @@ const switchMessage = (message, text) => {
 
 client.on('message', async (message) => {
     let numberPhone = onlyNumbers(message.from);
-
+    
+    await saveFrequency(numberPhone);
+    
     if (!userStates[numberPhone]) {
         userStates[numberPhone] = { awaitingResponse: true, awaitingConfirmation: false, awaitingEndService: false, timeoutId: null };
 
