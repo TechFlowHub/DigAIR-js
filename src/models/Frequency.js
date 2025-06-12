@@ -16,7 +16,7 @@ const Frequency = sequelize.define('Frequency', {
             key: 'id'
         }
     },
-    interations: {
+    interactions: {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 1
