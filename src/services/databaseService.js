@@ -86,14 +86,14 @@ async function saveFrequency(phone) {
         });
 
         if (existingFrequency) {
-            existingFrequency.interations += 1;
+            existingFrequency.interactions += 1;
             await existingFrequency.save();
-            console.log(`Frequência atualizada para ${phone}: ${existingFrequency.interations} interações hoje`);
+            console.log(`Frequência atualizada para ${phone}: ${existingFrequency.interactions} interações hoje`);
             return existingFrequency;
         } else {
             const newFrequency = await Frequency.create({ 
                 fk_phone: user.id,
-                interations: 1,
+                interactions: 1,
                 created_at: new Date() 
             });
             console.log(`Nova entrada de frequência criada para ${phone}`);
