@@ -1,12 +1,12 @@
 const qrcode = require('qrcode-terminal');
 const express = require('express');
 const app = express();
-const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
+const { Client, LocalAuth } = require('whatsapp-web.js');
 const { ia } = require('./groqIA/groq');
 
 const { QUESTION, RESP_QUESTION_1, RESP_QUESTION_2, RESP_QUESTION_3, RESP_QUESTION_4, RESP_QUESTION_5, RESP_QUESTION_6, RESP_QUESTION_7, RESP_QUESTION_8, RESP_QUESTION_9 } = require('./messages/Questions');
 const { CONTINUE_MESSAGE, INVALID_MESSAGE, FIRST_MESSAGE, FIRST_MESSAGE_REPEAT, EVALUATION_MESSAGE, EVALUATION_ERROR, EVALUATION_THANKS } = require('./messages/Menus');
-const { savePhoneNumber, saveEvaluation, existingPhone, saveRepeatOffenderPhone } = require('./services/databaseService');
+const { savePhoneNumber, saveEvaluation, existingPhone, saveRepeatOffenderPhone, saveFrequency } = require('./services/databaseService');
 
 const client = new Client({ 
     authStrategy: new LocalAuth(), 
@@ -53,7 +53,7 @@ client.on('disconnected', (reason) => {
 });
 
 onlyNumbers = (string) => {
-    return string.replace(/[^0-9]/g, "");
+    return string.replace(/[^0-8]/g, "");
 };
 
 const resetTimeout = (numberPhone, message) => {
@@ -77,22 +77,16 @@ const switchMessage = (message, text) => {
         case '5': message.reply(RESP_QUESTION_5); break;
         case '6': message.reply(RESP_QUESTION_6); break;
         case '7': message.reply(RESP_QUESTION_7); break;
-        case '8': message.reply(RESP_QUESTION_8); break;
-        
-        // Em desenvolvimento
-        case '9': {
-            const media = MessageMedia.fromFilePath('./src/pdf/teste.pdf');
-            message.reply(RESP_QUESTION_9);
-            message.reply(media);
-            break;
-        }        
+        case '8': message.reply(RESP_QUESTION_8); break;   
         default: console.log("entrou no default");
     }
 };
 
 client.on('message', async (message) => {
     let numberPhone = onlyNumbers(message.from);
-
+    
+    await saveFrequency(numberPhone);
+    
     if (!userStates[numberPhone]) {
         userStates[numberPhone] = { awaitingResponse: true, awaitingConfirmation: false, awaitingEndService: false, timeoutId: null };
 
@@ -151,7 +145,7 @@ client.on('message', async (message) => {
             }, 1000);
 
             return;
-        } else if (/^[0-9]$/.test(message.body)) {
+        } else if (/^[0-8]$/.test(message.body)) {
             sendFirstMessage[numberPhone] = false;
             setTimeout(() => {
                 switchMessage(message, message.body);
@@ -182,7 +176,7 @@ client.on('message', async (message) => {
             }, 1000);
         }
     }
-    if (/^[0-9]$/.test(message.body) && userStates[numberPhone].awaitingEndService === false) {
+    if (/^[0-8]$/.test(message.body) && userStates[numberPhone].awaitingEndService === false) {
         if (!(message.body === '0')) {
             sendFirstMessage[numberPhone] = false;
             setTimeout(() => {
@@ -202,7 +196,7 @@ client.on('message', async (message) => {
     } 
     if (
         !message.body.toLowerCase().startsWith('digair') && 
-        !(/^[0-9]$/.test(message.body)) &&
+        !(/^[0-8]$/.test(message.body)) &&
         sendFirstMessage[numberPhone] === false && 
         userStates[numberPhone].awaitingEndService === false)
         

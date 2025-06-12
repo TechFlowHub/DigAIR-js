@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:18
 
 WORKDIR /usr/src/app
 
@@ -28,7 +28,7 @@ RUN wget -qO- https://dl.google.com/linux/direct/google-chrome-stable_current_am
 ENV PUPPETEER_EXECUTABLE_PATH="/usr/bin/google-chrome-stable"
 
 # Copiar os arquivos do projeto
-COPY package.json package-lock.json ./
+COPY package*.json ./
 
 # Instalar dependências
 RUN npm install

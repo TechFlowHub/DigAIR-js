@@ -6,14 +6,14 @@ exports.FIRST_MESSAGE_REPEAT = `🟡 E aí! Quanto tempo! 😃👋\n
 Que bom te ver de novo por aqui! Pronto(a) para mais uma rodada de perguntas sobre o Imposto de Renda? 💵📄\n
 Me diz como posso te ajudar hoje! 🚀✨`
 
-exports.INVALID_MESSAGE = `⚠️ *Opção inválida!* Por favor, digite um número de *1 a 9* para escolher uma pergunta, *0 para encerrar* o atendimento ou *digair mais a sua pergunta*.`
+exports.INVALID_MESSAGE = `⚠️ *Opção inválida!* Por favor, digite um número de *1 a 8* para escolher uma pergunta, *0 para encerrar* o atendimento ou *digair mais a sua pergunta*.`
 
 exports.CONTINUE_MESSAGE = `🌟 Gostaria de ver o painel de opções novamente?\n
-Digite [SIM] para *SIM*, [F] para *FINALIZAR* o atendimento 👇😊, escolha uma nova opção entre *1 e 9* ou use o *digair mais a sua pergunta*.`
+Digite [SIM] para *SIM*, [F] para *FINALIZAR* o atendimento 👇😊, escolha uma nova opção entre *1 e 8* ou use o *digair mais a sua pergunta*.`
 
 exports.OPTION_CONTINUE_ERROR = `⚠️ *Opção inválida!*\n
 🌟 Gostaria de ver o painel de opções novamente?\n
-Por favor digite [SIM] para *SIM*, [F] para *FINALIZAR* o atendimento 👇😊, escolha uma nova opção entre *1 e 9* ou use o *digair mais a sua pergunta*.`
+Por favor digite [SIM] para *SIM*, [F] para *FINALIZAR* o atendimento 👇😊, escolha uma nova opção entre *1 e 8* ou use o *digair mais a sua pergunta*.`
 
 exports.EVALUATION_MESSAGE = `⭐ Avalie nosso atendimento! Escolha um número de *1 a 5*:\n
 *5 - 🤩 Excelente*
